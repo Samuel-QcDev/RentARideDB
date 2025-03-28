@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="RentARideDB.Views.ReservationSearchPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:RentARideDB.Models"
+    xmlns:viewmodel="clr-namespace:RentARideDB.ViewModel"
+    xmlns:local="clr-namespace:RentARideDB.Models"
+    xmlns:controls="clr-namespace:RentARideDB.Controls"
+    Title="Reservation Search"
+    x:DataType="viewmodel:ReservationSearchViewModel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary 
+                    xmlns:local="clr-namespace:RentARideDB.Models">
+            <local:RadioButtonValueConverter x:Key="RadioButtonValueConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- Toolbar with a button -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem                  
+            IconImageSource="home.png" 
+            Command="{Binding BackToMainPageCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout>
+
+            <!--<controls:HeaderView Greeting="{Binding Greeting}" />-->
+
+            <Grid
+            Margin="10,10,0,0"
+            Padding="5"
+            ColumnDefinitions="*,*,*,*,*,*,*,*"
+            ColumnSpacing="1"
+            RowDefinitions="*,*,*,*"
+            RowSpacing="5">
+
+                <Label
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Margin="0,5,0,5"
+                FontSize="Medium"
+                Text="Début : " />
+
+                <DatePicker
+                Date="{Binding StartDate}"
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                BackgroundColor="LightGreen"
+                FontSize="Medium"
+                HorizontalOptions="Center">
+                </DatePicker>
+
+                <TimePicker 
+                Time="{Binding StartTime}"
+                Grid.Row="0"
+                Grid.RowSpan="1"
+                Grid.Column="4"
+                Grid.ColumnSpan="3"
+                Margin="0,0,0,0"
+                FontSize="Medium"
+                HorizontalOptions="Fill">
+
+                </TimePicker>
+
+                <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                FontSize="Medium"
+                Text="Fin : " />
+
+                <DatePicker
+                Date="{Binding EndDate}"
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                BackgroundColor="LightGreen"
+                FontSize="Medium"
+                HorizontalOptions="Center">
+                </DatePicker>
+
+                <TimePicker 
+                Time="{Binding EndTime}"
+                Grid.Row="1"
+                Grid.RowSpan="1"
+                Grid.Column="4"
+                Grid.ColumnSpan="3"
+                Margin="0,0,0,0"
+                BackgroundColor="LightGreen"
+                FontSize="Medium"
+                HorizontalOptions="Fill">
+                </TimePicker>
+
+                <Label
+                x:Name="VehicleTypeLabel"
+                Grid.Row="2"
+                Grid.RowSpan="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                FontSize="Medium"
+                Text="Type de Véhicule : "
+                VerticalTextAlignment="Center" />
+         
+                <Picker
+                x:Name="VehicleType"
+                SelectedItem="{Binding ReservationSearchDetails.TypeVehicule}"
+                Grid.Row="2"
+                Grid.RowSpan="1"
+                Grid.Column="4"
+                Grid.ColumnSpan="3"
+                Margin="0,5,0,0"
+                BackgroundColor="LightGreen"
+                FontSize="Medium"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center">
+                    <Picker.Items>
+                        <x:String>Auto</x:String>
+                        <x:String>Moto</x:String>
+                        <x:String>Velo</x:String>
+                    </Picker.Items>
+                    <Picker.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding OnVehicleTypeChangedCommand}"/>
+                    </Picker.Behaviors>
+                </Picker>
+                <Label
+                x:Name="StationLabel"
+                Grid.Row="3"
+                Grid.RowSpan="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                FontSize="Medium"
+                Text="Station : "
+                VerticalTextAlignment="Center" />
+                <Picker
+                x:Name="StationName"
+                SelectedItem="{Binding ReservationSearchDetails.StationAddress}"
+                Grid.Row="3"
+                Grid.RowSpan="1"
+                Grid.Column="4"
+                Grid.ColumnSpan="3"
+                Margin="0,5,0,0"
+                BackgroundColor="LightGreen"
+                FontSize="Medium"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center">
+                    <Picker.Items>
+                        <x:String>All Stations</x:String>
+                        <x:String>Dorchester-Charest</x:String>
+                        <x:String>Carre D'Youville</x:String>
+                        <x:String>Limoilou</x:String>
+                        <x:String>Saint-Roch</x:String>
+                        <x:String>Beauport</x:String>
+                        <x:String>Vanier</x:String>
+                        <x:String>Vieux-Quebec - Plaines d'Abraham</x:String>
+                        <x:String>Vieux-Quebec - St-Jean</x:String>
+                        <x:String>Charlesbourg</x:String>
+                        <x:String>ULaval</x:String>
+                        <x:String>Sainte-Foy</x:String>
+                        <x:String>Sillery</x:String>
+                        <x:String>Levis</x:String>
+                        <x:String>Cap-Rouge</x:String>
+                        <x:String>Chutes Montmorency</x:String>
+                    </Picker.Items>
+                    <Picker.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding OnStationChangedCommand}"/>
+                    </Picker.Behaviors>
+                </Picker>
+
+            </Grid>
+            <!--  Need to hide the Options section if not auto  -->
+            <Grid
+            x:Name="OptionsLayout"
+            Margin="0,0,0,0"
+            Padding="10"
+            ColumnDefinitions="*,*,*,*,*,*,*,*"
+            ColumnSpacing="1"
+            IsVisible="{Binding IsAutoSelected}"
+            RowDefinitions="*,*,*,*,*"
+            RowSpacing="2">
+                <Grid
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="8"
+                Grid.RowSpan="1"
+                x:Name="RadioButtons"
+                ColumnDefinitions="*,*,*,*,*,*,*,Auto"
+                RowDefinitions="*,Auto"
+                ColumnSpacing="1"
+                RowSpacing="2"
+                Padding="10"
+                Margin="0,0,0,0"
+                RadioButtonGroup.GroupName="TypeVehicule" 
+                RadioButtonGroup.SelectedValue="{Binding CategorieAuto}">
+                    <Label
+                Grid.Row="1"
+                Grid.RowSpan="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                FontSize="Medium"
+                Text="Options : "/>
+                    <RadioButton
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                x:Name="RadioButtGas"
+                Content="À essence"
+                Value="Essence"
+                IsChecked="{Binding ReservationSearchDetails.CategorieAuto, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=Essence}">
+                    </RadioButton>
+                    <RadioButton
+                Grid.Row="0"
+                Grid.Column="4"
+                Grid.ColumnSpan="3"
+                x:Name="RadioButtElectric"
+                Content="Électrique"
+                Value="Électrique"
+                IsChecked="{Binding ReservationSearchDetails.CategorieAuto, Converter={StaticResource RadioButtonValueConverter}, ConverterParameter=Électrique}">
+                    </RadioButton>
+                </Grid>
+
+                <!--<Label
+                Grid.Row="4"
+                Grid.RowSpan="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                FontSize="Medium"
+                Text="Selected : " />
+                Test label below to check Binding
+                <Label
+                Grid.Row="4"
+                Grid.RowSpan="1"
+                Grid.Column="3"
+                Grid.ColumnSpan="3"
+                FontSize="Medium"
+                Text="{Binding CategorieAuto}" />-->
+
+                <CheckBox
+                x:Name="Mp3"
+                IsChecked="{Binding IsCheckedMP3}"    
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="1"
+                HorizontalOptions="End">
+                </CheckBox>
+
+                <Label
+                Grid.Row="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                Margin="10"
+                HorizontalTextAlignment="Start"
+                Text="Lecteur MP3" />
+                <CheckBox
+                x:Name="A_C"
+                IsChecked="{Binding IsCheckedAC}"
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="1"
+                HorizontalOptions="End" />
+                <Label
+                Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                Margin="10"
+                HorizontalTextAlignment="Start"
+                Text="Air Climatisé" />
+                <CheckBox
+                x:Name="Gps"
+                IsChecked="{Binding IsCheckedGPS}"
+                Grid.Row="2"
+                Grid.Column="4"
+                Grid.ColumnSpan="1"
+                HorizontalOptions="End" />
+                <Label
+                Grid.Row="2"
+                Grid.Column="5"
+                Grid.ColumnSpan="2"
+                Margin="10"
+                HorizontalTextAlignment="Start"
+                Text="GPS" />
+                <CheckBox
+                x:Name="SiegeAuto"
+                IsChecked="{Binding IsCheckedChildSeat}"
+                Grid.Row="3"
+                Grid.Column="4"
+                Grid.ColumnSpan="1"
+                HorizontalOptions="End" />
+                <Label
+                Grid.Row="3"
+                Grid.Column="5"
+                Grid.ColumnSpan="4"
+                Margin="10"
+                Text="Siège Enfant" />
+            </Grid>
+            <!--<Button Text="Test Command"
+        Command="{Binding OnStartTimeChangedCommand}" />-->
+            <!--<Button
+            x:Name="Search"
+            Margin="0,20,0,0"
+            Command="{Binding SearchCommand}"
+            CornerRadius="15"
+            FontSize="Medium"
+            HorizontalOptions="Center"
+            SemanticProperties.Hint="Navigates to Results page"
+            Text="Recherche"/>-->
+                <BoxView HeightRequest="1" Color="DarkGreen" HorizontalOptions="FillAndExpand" />
+            <CollectionView VerticalOptions="FillAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            ItemsSource="{Binding Vehicules}"
+                            SelectionMode="Single">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Vehicule">
+                        <Frame BorderColor="DarkGreen" Padding="10" Margin="10">
+                            <VerticalStackLayout>
+                                <HorizontalStackLayout Padding="10"
+                                                       Spacing="10">
+                                    <Label Text="{Binding }"/>
+
+                                </HorizontalStackLayout>
+                                <Button Text="Reserve" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReservationSearchViewModel}}, Path=ReserveCommand}" 
+                                            CommandParameter="{Binding .}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

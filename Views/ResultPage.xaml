@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="RentARideDB.Views.ResultPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModel="clr-namespace:RentARideDB.ViewModel"
+    Title="Résultats">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label
+                FontSize="Medium"
+                HorizontalTextAlignment="Center"
+                Text="Véhicules disponibles" />
+            <CollectionView Margin="30,20,0,0" SelectionMode="Single">
+                <!--  Add Binding later  -->
+                <!--  ItemsSource="{Binding Results}"  -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <!--<Button
+                x:Name="Submit"
+                Command="{Binding ReserveCommand}"
+                CornerRadius="15"
+                FontSize="Medium"
+                Text="Reserve"
+                WidthRequest="200" />-->
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="RentARideDB.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Model="clr-namespace:RentARideDB.Models"
+    xmlns:controls="clr-namespace:RentARideDB.Controls"
+    xmlns:viewmodel="clr-namespace:RentARideDB.ViewModel"
+    xmlns:services="clr-namespace:RentARideDB.Services"
+    x:DataType="viewmodel:MainViewModel">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="10" Spacing="50">
+
+        
+        <Image Source="rentaride_logo.png" />
+
+
+        <Button
+            x:Name="Reservation"
+            Command="{Binding ReservationCommand}"
+            CornerRadius="15"
+            FontSize="Medium"
+            HeightRequest="100"
+            SemanticProperties.Hint="Navigate to Create Reservation page"
+            Text="Faire une Réservation"
+            WidthRequest="320">
+            <Button.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.8"
+                    Radius="40"
+                    Offset="20,20" />
+            </Button.Shadow>
+        </Button>
+
+        <Button
+            x:Name="Historique"
+            Command="{Binding ConsultHistoryCommand}"
+            CornerRadius="15"
+            FontSize="Medium"
+            HeightRequest="100"
+            SemanticProperties.Hint="Navigates to Reservation history page"
+            Text="Consulter les Réservations"
+            WidthRequest="320">
+            <Button.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.8"
+                    Radius="40"
+                    Offset="20,20" />
+            </Button.Shadow>
+        </Button>
+
+        <BoxView
+            HeightRequest="1"
+            HorizontalOptions="FillAndExpand"
+            Color="DarkGreen" />
+
+            <CollectionView
+            HorizontalOptions="FillAndExpand"
+            ItemsSource="{Binding ReservationsResultCurrent}"
+            SelectionMode="Single"
+            VerticalOptions="FillAndExpand">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="Model:Reservation">
+                        <Frame Margin="10" Padding="8" BorderColor="DarkGreen">
+                            <HorizontalStackLayout Padding="0" Spacing="2">
+
+                                <VerticalStackLayout Padding="0" Spacing="2">
+                                    <Label FontSize="Small" Text="{Binding TypeVehicule}"/>
+                                    <Label FontSize="Small" Text="Station : "/>
+                                    <Label FontSize="Small" Text="Start : "/>
+                                    <Label FontSize="Small" Text="End : "/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Padding="0" Spacing="2">
+                                    <Label FontSize="Small" Text="{Binding VehiculeID}" />
+                                    <Label FontSize="Small" Text="{Binding StationId}" />
+                                    <Label FontSize="Small" Text="{Binding StartTime}" />
+                                    <Label FontSize="Small" Text="{Binding EndTime}" />
+                                </VerticalStackLayout>
+
+                                <!--<VerticalStackLayout Padding="0" Spacing="2">
+                                <Label FontSize="Small" Text="{Binding CategorieAuto}" />
+
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Padding="0" Spacing="2">
+                                <Label FontSize="Small" Text="{Binding AutoOptions}" />
+
+                            </VerticalStackLayout>-->
+                                <!--<Button Text="Cancel" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReservationSearchViewModel}}, Path=CancelCommand}"   
+                                    CommandParameter="{Binding .}" />-->
+
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+    </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
