@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentARideDB", "RentARideDB.csproj", "{FF7F6757-5EA1-4547-88EC-132AA46DBFEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARideDBTest", "..\RentARideDBTest\RentARideDBTest.csproj", "{8EC272E0-52A5-424A-8751-4679E6F2E39C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{FF7F6757-5EA1-4547-88EC-132AA46DBFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF7F6757-5EA1-4547-88EC-132AA46DBFEF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF7F6757-5EA1-4547-88EC-132AA46DBFEF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8EC272E0-52A5-424A-8751-4679E6F2E39C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC272E0-52A5-424A-8751-4679E6F2E39C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC272E0-52A5-424A-8751-4679E6F2E39C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC272E0-52A5-424A-8751-4679E6F2E39C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

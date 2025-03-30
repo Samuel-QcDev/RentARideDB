@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RentARideDB.Models;
 
 
 namespace RentARide.DbContext
@@ -33,27 +34,28 @@ namespace RentARide.DbContext
                 if (_dbConnection == null)
                 {
                     _dbConnection = new SQLiteAsyncConnection(dtabasePath, Flags);
-                    //_dbConnection.CreateTableAsync<Login>();
-                    //_dbConnection.CreateTableAsync<Auto>();
-                    //_dbConnection.CreateTableAsync<Moto>();
-                    //_dbConnection.CreateTableAsync<Station>();
-                    //_dbConnection.CreateTableAsync<Vehicule>();
-                    //_dbConnection.CreateTableAsync<Velo>();
-
+                    _dbConnection.CreateTableAsync<Login>();
+                    _dbConnection.CreateTableAsync<Auto>();
+                    _dbConnection.CreateTableAsync<Moto>();
+                    _dbConnection.CreateTableAsync<Station>();
+                    _dbConnection.CreateTableAsync<Vehicule>();
+                    _dbConnection.CreateTableAsync<Velo>();
+                    _dbConnection.CreateTableAsync<Reservation>();
+                    _dbConnection.CreateTableAsync<ReservationResult>();
+                    _dbConnection.CreateTableAsync<Membre>();
+                    _dbConnection.CreateTableAsync<ReservationSearch>();
                 }
-
             }
-
         }
 
         private async Task Init()
         {
 
         }
-        //public async Task<int> CreateTableAsync<TEntity>(TEntity entity) where TEntity : class
-        //{
-        //    return await _dbConnection.CreateTable(entity);
-        //}
+        public async Task<SQLite.CreateTableResult> CreateTableAsync<TEntity>() where TEntity : class
+        {
+            return await _dbConnection.CreateTableAsync(typeof(TEntity));
+        }
         public async Task<int> CreateAsync<TEntity>(TEntity entity) where TEntity : class
         {
             return await _dbConnection.InsertAsync(entity);
