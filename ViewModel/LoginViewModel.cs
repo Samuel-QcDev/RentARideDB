@@ -8,6 +8,7 @@ using RentARideDB.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using RentARideDB.Models;
+using RentARideDB.Services;
 using RentARideDB.ViewModel;
 using System.Runtime.CompilerServices;
 
@@ -18,6 +19,9 @@ namespace RentARideDB.ViewModel;
 [QueryProperty(nameof(MemberFirstName), "memberFirstName")]
 public partial class LoginViewModel : LocalBaseViewModel
 {
+    //private readonly ReservationService _reservationService;
+    private readonly ApplicationDbContext _dbContext;
+
     [ObservableProperty] private string memberEmail;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;

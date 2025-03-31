@@ -31,9 +31,9 @@ public partial class MainViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
 
-    public MainViewModel(ReservationService reservationService)
+    public MainViewModel(ApplicationDbContext dbContext)
     {
-        _reservationService = ReservationService.Instance;
+
     }
     public ReservationResult ResultDetails { get; set; }
     public ReservationSearchViewModel SearchViewModel { get; set; }

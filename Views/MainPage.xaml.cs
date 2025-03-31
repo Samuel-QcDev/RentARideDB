@@ -5,16 +5,19 @@ namespace RentARideDB.Views;
 
 public partial class MainPage : ContentPage
 {
+    private readonly ApplicationDbContext _dbContext;
 
-    public MainPage()
+    public MainPage(ApplicationDbContext dbContext)
 	{
 
         InitializeComponent();
+        _dbContext = dbContext;
 
-        // Create the ReservationService instance
-        var reservationService = new ReservationService();
-        MainViewModel vm = new MainViewModel(reservationService);
-        BindingContext = vm;
+        //// Create the ReservationService instance
+        //var reservationService = new ReservationService();
+
+        //MainViewModel vm = new MainViewModel(reservationService);
+        //BindingContext = vm;
     }
 
         //  private void CreateReservation_Clicked(object sender, EventArgs e)

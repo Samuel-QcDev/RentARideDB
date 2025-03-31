@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RentARideDB.Models;
+using RentARideDB.Services;
 using CommunityToolkit.Mvvm.Input;
 
 namespace RentARideDB.ViewModel
 {
     public partial class ReservationViewModel : LocalBaseViewModel
     {
+        private readonly ApplicationDbContext _dbContext;
         public ReservationSearch ReservationSearchDetails { get; set; }
 
 
@@ -18,7 +20,7 @@ namespace RentARideDB.ViewModel
 
 
 
-        public ReservationViewModel()
+        public ReservationViewModel(ApplicationDbContext dbContext)
         {
             ReservationDetails = new Reservation();
 

@@ -28,7 +28,7 @@ public static class MauiProgram
 
         // Views
         builder.Services.AddSingleton<LoginPage>();
-        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<HistoriqueReservationPage>();
         builder.Services.AddSingleton<ReservationSearchPage>();
         builder.Services.AddSingleton<ResultPage>();

@@ -27,6 +27,8 @@ namespace RentARideDB.ViewModel;
 [QueryProperty(nameof(MemberFirstName), "memberFirstName")]
 public partial class ReservationSearchViewModel : LocalBaseViewModel
 {
+    private readonly ApplicationDbContext _dbContext;
+
     [ObservableProperty] private string memberEmail;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
@@ -70,10 +72,9 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public ReservationResult ResultDetails { get; set; }
     public int DateChangedFlag { get; set; } = 0;
 
-    public ObservableCollection<Vehicule> Vehicules { get; } = new();
-    public ObservableCollection<Station> Stations { get; } = new();
 
-    public ReservationService ReservationService => ReservationService.Instance;
+
+    //public ReservationService ReservationService => ReservationService.Instance;
 
     public Vehicule VehiculeDetails { get; set; }
     public ICommand OnVehicleTypeChangedCommand { get; }
@@ -159,7 +160,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         }
         return true; // Car is available
     }
-    public ReservationSearchViewModel(ReservationService reservationService)
+    public ReservationSearchViewModel(ApplicationDbContext dbContext)
     {
         //Console.WriteLine($"MemberEmail: {MemberEmail}, MemberPassword: {MemberPassword}, MemberFirstName: {MemberFirstName}");
 
@@ -213,7 +214,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
     public void  LoadData()
     {
-        Vehicules.Clear();
+        _dbContext.Vehicules.Clear();
         //Total # of Vehicules : 102
         //# of Autos : 74
         CreerVehicule(0, new Auto("AU001", "P001", "Essence", []));
@@ -403,21 +404,23 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     Vehicule[] myVehicules = new Vehicule[110];
 
      // Method Create a Vehicule and add it to list of all vehicules
-    public void CreerVehicule(int index, Vehicule vehicule)
+    public async void CreerVehicule(int index, Vehicule vehicule)
     {
         myVehicules[index] = vehicule;
+        await _dbContext.CreateAsync(vehicule);
         //Vehicules.Add(myVehicules[index]);
     }
-    public static void creerMembre(int memberId, string name, string password, string level)
+    public async void creerMembre(string name, string password, string email)
     {
-        return;
+        await _dbContext.CreateAsync(new Membre(name, password, email));
     }
     //List of all stations
     Station[] myStations = new Station[20];
     // Method to create a Station and add it to list of all stations
-    public void CreerStation(int index, string id, string address, int spaces, int bikeSpaces)
+    public async void CreerStation(int index, string id, string address, int spaces, int bikeSpaces)
     {
         myStations[index] = new Station(index, id, address, spaces, bikeSpaces);
+        await _dbContext.CreateAsync(new Station(index, id, address, spaces, bikeSpaces));
     }
 
     partial void OnCategorieAutoChanged(string value)
@@ -534,16 +537,16 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     // Main method to filter vehicules based on criteria
     private void AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
     {
-        Vehicules.Clear(); // Clear the Vehicules CollectionView
+        _dbContext.Vehicules.Clear(); // Clear the Vehicules CollectionView
         StationDetails.selectedStationID.Clear();
         // Iterate over all stations to verify selected station(s)
         for (int i = myStations.Length - 1; i >= 0; i--)
         {
-            if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (ReservationSearchDetails.StationAddress == "All Stations"))
+            if ((myStations[i] != null) && (!_dbContext.Stations.Contains(myStations[i])) && (ReservationSearchDetails.StationAddress == "All Stations"))
             {
                 StationDetails.selectedStationID.Add(myStations[i].StationId);
             }
-            else if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (myStations[i].StationAddress == ReservationSearchDetails.StationAddress))
+            else if ((myStations[i] != null) && (!_dbContext.Stations.Contains(myStations[i])) && (myStations[i].StationAddress == ReservationSearchDetails.StationAddress))
             {
                 StationDetails.selectedStationID.Add(myStations[i].StationId);
             }
@@ -579,7 +582,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             }
         }
     }
-
     private bool CheckCategorieAuto(Vehicule vehicule)
     {
         string selectedCategory = CategorieAuto;
@@ -639,7 +641,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         }
         return false;
     }
-    private void CheckStation(Vehicule vehicule)
+    private async void CheckStation(Vehicule vehicule)
     {
         // Check if vehicule (from myVehicules[i] above) is at a selected station & if it is available
         foreach (string station in StationDetails.selectedStationID)
@@ -649,7 +651,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
                 if (IsCarAvailable(ReservationDetails.Reservations, vehicule.vehiculeId, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime))
                 {
                     // Add the vehicule directly to the CollectionView
-                    Vehicules.Add(vehicule);
+                    _dbContext.Vehicules.Add(vehicule);
+                    //await _dbContext.CreateAsync(vehicule);
                     //ReservationSearchDetails.indexVehiculesToBeAdded.Add(i);
                 }
             }
@@ -664,19 +667,19 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     //}
     private void OnReservationAdded()
     {
-        ReservationService.ReservationsResultPast.Clear();
-        ReservationService.ReservationsResultCurrent.Clear();
+        _dbContext.ReservationsResultPast.Clear();
+        _dbContext.ReservationsResultCurrent.Clear();
         foreach (Reservation reservation in ReservationDetails.Reservations)
         {
-            if ((reservation != null) && (reservation.MemberID == "MEM007") && (!(ReservationService.ReservationsResultPast.Contains(reservation))|| !(ReservationService.ReservationsResultCurrent.Contains(reservation))))
+            if ((reservation != null) && (reservation.MemberID == "MEM007") && (!(_dbContext.ReservationsResultPast.Contains(reservation))|| !(_dbContext.ReservationsResultCurrent.Contains(reservation))))
             {
                 if (reservation.EndTime < DateTime.Now)
                 {
-                    ReservationService.ReservationsResultPast.Add(reservation);
+                    _dbContext.ReservationsResultPast.Add(reservation);
                 }
                 else
                 {
-                    ReservationService.ReservationsResultCurrent.Add(reservation);
+                    _dbContext.ReservationsResultCurrent.Add(reservation);
                 }
             }
         }
@@ -742,9 +745,9 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
     private void Cancel(Reservation reservation)
     {
-        Console.WriteLine(ReservationService.ReservationsResultCurrent.Count);
-        ReservationService.CancelReservation(reservation);
-        Console.WriteLine(ReservationService.ReservationsResultCurrent.Count);
+        //Console.WriteLine(ReservationService.ReservationsResultCurrent.Count);
+        //ReservationService.CancelReservation(reservation);
+        //Console.WriteLine(ReservationService.ReservationsResultCurrent.Count);
     }
     [RelayCommand]
     private async Task BackToMainPage()

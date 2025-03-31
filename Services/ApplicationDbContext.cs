@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RentARideDB.Models;
+using System.Collections.ObjectModel;
 
 
 namespace RentARideDB.Services
@@ -27,27 +28,36 @@ namespace RentARideDB.Services
             SQLite.SQLiteOpenFlags.Create |
             // enable multi-threaded database access
             SQLite.SQLiteOpenFlags.SharedCache;
+        public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
+        public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
+        public ObservableCollection<Vehicule> Vehicules { get; } = new();
+        public ObservableCollection<Station> Stations { get; } = new();
 
         public ApplicationDbContext()
         {
-            {
-                if (_dbConnection == null)
-                {
-                    _dbConnection = new SQLiteAsyncConnection(dtabasePath, Flags);
-                    _dbConnection.CreateTableAsync<Login>();
-                    _dbConnection.CreateTableAsync<Auto>();
-                    _dbConnection.CreateTableAsync<Moto>();
-                    _dbConnection.CreateTableAsync<Station>();
-                    _dbConnection.CreateTableAsync<Vehicule>();
-                    _dbConnection.CreateTableAsync<Velo>();
-                    _dbConnection.CreateTableAsync<Reservation>();
-                    _dbConnection.CreateTableAsync<ReservationResult>();
-                    _dbConnection.CreateTableAsync<Membre>();
-                    _dbConnection.CreateTableAsync<ReservationSearch>();
-                }
-            }
-        }
+            ReservationsResultPast = new ObservableCollection<Reservation>();
+            ReservationsResultCurrent = new ObservableCollection<Reservation>();
 
+            if (_dbConnection == null)
+            {
+                _dbConnection = new SQLiteAsyncConnection(dtabasePath, Flags);
+                CreateTablesAsync();  // Create tables asynchronously
+            }
+            
+        }
+        private async void CreateTablesAsync()
+        {
+            await _dbConnection.CreateTableAsync<Login>();
+            await _dbConnection.CreateTableAsync<Auto>();
+            await _dbConnection.CreateTableAsync<Moto>();
+            await _dbConnection.CreateTableAsync<Station>();
+            await _dbConnection.CreateTableAsync<Vehicule>();
+            await _dbConnection.CreateTableAsync<Velo>();
+            await _dbConnection.CreateTableAsync<Reservation>();
+            await _dbConnection.CreateTableAsync<ReservationResult>();
+            await _dbConnection.CreateTableAsync<Membre>();
+            await _dbConnection.CreateTableAsync<ReservationSearch>();
+        }
         private async Task Init()
         {
 

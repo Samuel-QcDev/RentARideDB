@@ -12,12 +12,14 @@ using RentARideDB;
 using RentARideDB.Models;
 using RentARideDB.ViewModel;
 using RentARideDB.Views;
+using RentARideDB.Services;
 
 namespace RentARideDB.ViewModel;
 
 public partial class MembreViewModel : LocalBaseViewModel
 {
-    public MembreViewModel()
+    private readonly ApplicationDbContext _dbContext;
+    public MembreViewModel(ApplicationDbContext dbContext)
     {
         MembreDetails = new Membre();
         CreerMembre(0, "Julie", "Or");
@@ -42,9 +44,10 @@ public partial class MembreViewModel : LocalBaseViewModel
     }
 
     MembreDetails[] myMembres = new MembreDetails[10];
-    public void CreerMembre(int id, string name, string level)
+    public async void CreerMembre(int id, string name, string level)
     {
         myMembres[id] = new MembreDetails(id, name, level);
+        await _dbContext.CreateAsync(new MembreDetails(id, name, level));
     }
 
 
@@ -55,6 +58,7 @@ public partial class MembreViewModel : LocalBaseViewModel
         var memberFirstName = memberDetails.FirstName;
         var memberEmail = memberDetails.MemberEmail;
         var memberPassword = memberDetails.MemberPassword;
+        await _dbContext.CreateAsync(new Membre(memberFirstName, memberPassword, memberEmail));
 
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         var message = "Your account was created!";

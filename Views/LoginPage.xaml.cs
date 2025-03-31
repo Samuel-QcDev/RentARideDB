@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using RentARideDB.ViewModel;
+using RentARideDB.Services;
 
 namespace RentARideDB.Views;
 public partial class LoginPage : ContentPage
@@ -8,7 +9,8 @@ public partial class LoginPage : ContentPage
     private static ProgressBar LoginProgressBar;
 
     private LoginViewModel vm = new();
-        
+    private readonly ApplicationDbContext _dbContext;
+
     public LoginPage()
 	{
         

@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RentARideDB.Models;
 using RentARideDB.ViewModel;
+using RentARideDB.Services;
 
 namespace RentARideDB.ViewModel;
 

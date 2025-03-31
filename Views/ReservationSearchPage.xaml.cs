@@ -28,10 +28,12 @@ public partial class ReservationSearchPage : ContentPage
     //public Enum Options { get; set; }
 
   
-    public ReservationSearchPage(ReservationSearchViewModel vm)
+    public ReservationSearchPage(ApplicationDbContext dbContext)
         {
-            InitializeComponent();
-            BindingContext = vm;
+        InitializeComponent();
+        _dbContext = dbContext;  // Dependency Injection automatically provides the instance
+        var vm = new ReservationSearchViewModel(_dbContext);
+        BindingContext = vm;
             
         }
 

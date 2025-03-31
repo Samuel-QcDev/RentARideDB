@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using SQLite;
 
 namespace RentARideDB.Models
 {
    
     public partial class Station : ObservableObject
     {
-        [ObservableProperty] public string stationId;
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        [ObservableProperty] 
+        public string stationId;
         [ObservableProperty] private string stationAddress;
         [ObservableProperty] private int parkSpaces;
         [ObservableProperty] private int occupiedSpaces;
