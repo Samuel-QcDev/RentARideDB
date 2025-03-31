@@ -9,11 +9,14 @@ using CommunityToolkit.Mvvm.Messaging;
 using System.Runtime.Intrinsics.X86;
 using RentARideDB.ViewModel;
 using RentARideDB.Models;
+using RentARideDB.Services;
 
 namespace RentARideDB.Views;
 
 public partial class ReservationSearchPage : ContentPage
 {
+    private ApplicationDbContext _dbContext;
+
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public TimeSpan StartTime { get; set; }
@@ -30,13 +33,6 @@ public partial class ReservationSearchPage : ContentPage
             InitializeComponent();
             BindingContext = vm;
             
-            // When DatePicker value changes, process the date
-            //StartDate = StartDate.Date;  // Use .Date to reset the time to midnight
-            //                             // When DatePicker value changes, process the date
-            //EndDate = EndDate.Date;  // Use .Date to reset the time to midnight
-
-        //var button = myButton;
-        //button.BindingContext = new ReservationViewModel();
         }
 
     // This method is called when the page is about to appear

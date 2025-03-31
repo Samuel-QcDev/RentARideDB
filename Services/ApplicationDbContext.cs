@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using RentARideDB.Models;
 
 
-namespace RentARide.DbContext
+namespace RentARideDB.Services
 {
     public class ApplicationDbContext
     {
