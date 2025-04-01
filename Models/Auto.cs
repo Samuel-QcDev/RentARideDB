@@ -11,7 +11,6 @@ namespace RentARideDB.Models
     public partial class Auto : Vehicule
     {
         public string categorieAuto { get; set; }
-        [PrimaryKey, AutoIncrement]
         public int autoId { get; set; }
 
         [Ignore]  // Ignore this property for SQLite storage

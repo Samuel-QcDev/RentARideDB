@@ -733,19 +733,19 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         Console.WriteLine("Reserve called for vehicule: " + vehicule.vehiculeId);
         Console.WriteLine("# of items in ReservationResults collection: " );
         Console.WriteLine("# of items in Reservations collection: " + ReservationDetails.Reservations.Count);
-        int indexRes = ReservationDetails.myReservations.Length-1;
-        string resID;
+        //int indexRes = ReservationDetails.myReservations.Length-1;
+        //string resID;
         // ID for Logged in member, will need to be changed to retrieve MemberID from MembreDetails
         string currentMemberID = "MEM007";
 
-        if (indexRes < 100)
-        {
-            resID = "RES00" + (indexRes).ToString();
-        }
-        else
-        {
-            resID = "RES0" + (indexRes).ToString();
-        }
+        //if (indexRes < 100)
+        //{
+        //    resID = "RES00" + (indexRes).ToString();
+        //}
+        //else
+        //{
+        //    resID = "RES0" + (indexRes).ToString();
+        //}
         //_reservationService.AddReservation(new Reservation(resID, currentMemberID, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime, vehicule));
         //ReservationSearchDetails.RequestedEndTime = EndDate.Add(EndTime);
         TimeSpan interval = ReservationSearchDetails.RequestedEndTime - ReservationSearchDetails.RequestedStartTime;

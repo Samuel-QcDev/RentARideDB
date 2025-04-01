@@ -49,18 +49,8 @@ namespace RentARideDB.Models
             this.VehiculeID = vehicule.vehiculeId; // Set the VehiculeID from the vehicule object (handle null case)
         }
 
-        public Reservation[] myReservations = new Reservation[100];
+        //public Reservation[] myReservations = new Reservation[100];
 
-        public void CreerReservation(int index, Reservation reservation)
-        {
-            myReservations[index] = reservation;
-            Reservations.Add(myReservations[index]);
-        }
-        public void CreerReservation(int index, Vehicule currentVehicule, Reservation reservation)
-        {
-            myReservations[index] = reservation;
-            Reservations.Add(myReservations[index]);
-        }
 
         //[RelayCommand]
         //private async Task Reserve()

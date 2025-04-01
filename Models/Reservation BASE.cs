@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLite;
 
 namespace RentARideDB.Models
 {
@@ -30,8 +31,9 @@ namespace RentARideDB.Models
         //[ObservableProperty]
         //public string autoOptionsString;
         //public bool IsChecked { get; set; }
-        [ObservableProperty]
-        public List<string> autoOptions;
+        //[ObservableProperty]
+        //public List<string> autoOptions;
+        [Ignore]
         public ObservableCollection<Reservation> Reservations { get; } = new();
         //[ObservableProperty]
         //public List<Vehicule> searchResults = new();
