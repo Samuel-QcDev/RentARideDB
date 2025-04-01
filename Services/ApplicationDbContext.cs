@@ -28,15 +28,15 @@ namespace RentARideDB.Services
             SQLite.SQLiteOpenFlags.Create |
             // enable multi-threaded database access
             SQLite.SQLiteOpenFlags.SharedCache;
+
+        private static ApplicationDbContext _instance;
         public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
         public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
-        public ObservableCollection<Vehicule> Vehicules { get; } = new();
-        public ObservableCollection<Station> Stations { get; } = new();
+
 
         public ApplicationDbContext()
         {
-            ReservationsResultPast = new ObservableCollection<Reservation>();
-            ReservationsResultCurrent = new ObservableCollection<Reservation>();
+
 
             if (_dbConnection == null)
             {
@@ -49,12 +49,13 @@ namespace RentARideDB.Services
         {
             await _dbConnection.CreateTableAsync<Login>();
             await _dbConnection.CreateTableAsync<Auto>();
+            await _dbConnection.CreateTableAsync<AutoOption>();
             await _dbConnection.CreateTableAsync<Moto>();
-            await _dbConnection.CreateTableAsync<Station>();
+            //await _dbConnection.CreateTableAsync<Station>();  // Need to create a new table for the list of selectedStationId
             await _dbConnection.CreateTableAsync<Vehicule>();
             await _dbConnection.CreateTableAsync<Velo>();
             await _dbConnection.CreateTableAsync<Reservation>();
-            await _dbConnection.CreateTableAsync<ReservationResult>();
+            //await _dbConnection.CreateTableAsync<ReservationResult>();
             await _dbConnection.CreateTableAsync<Membre>();
             await _dbConnection.CreateTableAsync<ReservationSearch>();
         }

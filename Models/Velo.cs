@@ -16,10 +16,9 @@ namespace RentARideDB.Models
         {
 
         }
-        public Velo(string id, string stationID)
+        public Velo(string stationID)
         {
             this.type = "Velo";
-            this.vehiculeId = id;
             this.vehiculeStationId = stationID;
         }
         public override string ToString()

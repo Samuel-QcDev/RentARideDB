@@ -8,6 +8,7 @@
     xmlns:viewmodel="clr-namespace:RentARideDB.ViewModel"
     xmlns:local="clr-namespace:RentARideDB.Models"
     xmlns:controls="clr-namespace:RentARideDB.Controls"
+    xmlns:services="clr-namespace:RentARideDB.Services"
     Title="Reservation Search"
     x:DataType="viewmodel:ReservationSearchViewModel">
 

@@ -21,10 +21,10 @@ namespace RentARideDB.ViewModel;
 
 public partial class MainViewModel : LocalBaseViewModel
     {
-    private readonly ReservationService _reservationService;
+    private readonly ApplicationDbContext _dbContext;
 
     private ObservableCollection<Reservation> _reservationsResult;
-    public ObservableCollection<Reservation> ReservationsResultCurrent => _reservationService.ReservationsResultCurrent;
+    public ObservableCollection<Reservation> ReservationsResultCurrent => _dbContext.ReservationsResultCurrent;
 
 
     [ObservableProperty] private string memberEmail;
@@ -37,7 +37,7 @@ public partial class MainViewModel : LocalBaseViewModel
     }
     public ReservationResult ResultDetails { get; set; }
     public ReservationSearchViewModel SearchViewModel { get; set; }
-    //public ObservableCollection<Reservation> ReservationsResult { get; } = new();
+    public ObservableCollection<Reservation> ReservationsResult { get; } = new();
 
 
     [RelayCommand]

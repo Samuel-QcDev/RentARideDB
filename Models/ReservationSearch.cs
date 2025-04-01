@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
+using SQLite;
 
 namespace RentARideDB.Models
 {
@@ -26,9 +27,10 @@ namespace RentARideDB.Models
         private DateTime requestedStartTime;
         [ObservableProperty]
         private DateTime requestedEndTime;
-
-        public List<int> indexVehiculesToBeRemoved = new();
-        public List<int> indexVehiculesToBeAdded = new();
+        [Ignore]
+        public List<int> indexVehiculesToBeRemoved { get; set; } = new();
+        [Ignore]
+        public List<int> indexVehiculesToBeAdded { get; set; } = new();
 
         private void OnTimeChanged(TimeSpan newTime)
         {

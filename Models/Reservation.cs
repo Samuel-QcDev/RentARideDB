@@ -9,12 +9,14 @@ using CommunityToolkit.Mvvm.Input;
 using System.Reflection;
 using System.Collections.ObjectModel;
 using RentARideDB.Tools;
+using SQLite;
 
 namespace RentARideDB.Models
 {
     public partial class Reservation : Reservation_BASE
-    {        
-        public string ReservationID { get; set; }
+    {
+        [PrimaryKey, AutoIncrement]
+        public int ReservationID { get; set; }
         public int BikeReturnStationID { get; set; }
         [ObservableProperty]
         private DateTime startTime;
@@ -28,9 +30,8 @@ namespace RentARideDB.Models
         {
             
         }
-        public Reservation(string id, string memberid, DateTime requestedStartTime, DateTime requestedEndTime, string typeVehicule, string stationID, string vehiculeId)
+        public Reservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, string typeVehicule, string stationID, string vehiculeId)
         {
-            this.ReservationID = id;
             this.MemberID = memberid;
             this.StartTime = Utils.RoundToNearest30Minutes(requestedStartTime);
             this.EndTime = Utils.RoundToNearest30Minutes(requestedEndTime);
@@ -38,15 +39,14 @@ namespace RentARideDB.Models
             this.StationId = stationID;
             this.VehiculeID = vehiculeId;
         }
-        public Reservation(string id, string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
+        public Reservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
         {
-            this.ReservationID = id;
             this.MemberID = memberid;
             this.StartTime = Utils.RoundToNearest30Minutes(requestedStartTime);
             this.EndTime = Utils.RoundToNearest30Minutes(requestedEndTime);
             this.TypeVehicule = vehicule.type;
             this.StationId = vehicule.vehiculeStationId;
-            this.VehiculeID = vehicule.vehiculeId;
+            this.VehiculeID = vehicule.vehiculeId; // Set the VehiculeID from the vehicule object (handle null case)
         }
 
         public Reservation[] myReservations = new Reservation[100];
