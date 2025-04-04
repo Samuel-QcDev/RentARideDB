@@ -7,14 +7,15 @@ namespace RentARideDB.ViewModel;
 
 public partial class HistoriqueReservationViewModel : LocalBaseViewModel
 {
-    private readonly ReservationService _reservationService;
+    //private readonly ReservationService _reservationService;
+    private readonly ApplicationDbContext _dbContext;
 
     private ObservableCollection<Reservation> _reservationsResult;
-    public ObservableCollection<Reservation> ReservationsResultPast => _reservationService.ReservationsResultPast;
+    public ObservableCollection<Reservation> ReservationsResultPast => _dbContext.ReservationsResultPast;
 
-    public HistoriqueReservationViewModel(ReservationService reservationService)
+    public HistoriqueReservationViewModel(ApplicationDbContext dbContext)
     {
-        _reservationService = ReservationService.Instance;
+        _dbContext = dbContext;
     }
 
     [RelayCommand]

@@ -31,7 +31,7 @@ namespace RentARideDB.Services
         public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
         public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
    
-        private ApplicationDbContext()
+        public ApplicationDbContext()
         {
             // Initialize the database connection here
             _dbConnection = new SQLiteAsyncConnection(databasePath, Flags);

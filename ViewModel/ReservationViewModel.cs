@@ -23,7 +23,6 @@ namespace RentARideDB.ViewModel
         public ReservationViewModel(ApplicationDbContext dbContext)
         {
             ReservationDetails = new Reservation();
-
         }
 
     }

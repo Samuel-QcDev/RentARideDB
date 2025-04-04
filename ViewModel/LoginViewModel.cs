@@ -19,14 +19,14 @@ namespace RentARideDB.ViewModel;
 [QueryProperty(nameof(MemberFirstName), "memberFirstName")]
 public partial class LoginViewModel : LocalBaseViewModel
 {
-    //private readonly ReservationService _reservationService;
     private readonly ApplicationDbContext _dbContext;
 
     [ObservableProperty] private string memberEmail;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
-    public LoginViewModel()
+    public LoginViewModel(ApplicationDbContext dbContext)
     {
+        _dbContext = dbContext;
         LoginDetails = new Login();
     }
     public Login LoginDetails { get; set; }

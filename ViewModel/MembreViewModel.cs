@@ -21,6 +21,8 @@ public partial class MembreViewModel : LocalBaseViewModel
     private readonly ApplicationDbContext _dbContext;
     public MembreViewModel(ApplicationDbContext dbContext)
     {
+        _dbContext = dbContext;
+
         MembreDetails = new Membre();
         CreerMembre(0, "Julie", "Or");
         CreerMembre(1, "Tom", "Bronze");
