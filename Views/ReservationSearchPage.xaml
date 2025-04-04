@@ -321,7 +321,7 @@
                             <VerticalStackLayout>
                                 <HorizontalStackLayout Padding="10"
                                                        Spacing="10">
-                                    <Label Text="{Binding }"/>
+                                    <Label Text="{Binding vehiculeId}"/>
 
                                 </HorizontalStackLayout>
                                 <Button Text="Reserve" 

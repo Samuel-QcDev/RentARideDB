@@ -7,17 +7,15 @@ public partial class MainPage : ContentPage
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public MainPage(ApplicationDbContext dbContext)
+    public MainPage()
 	{
 
         InitializeComponent();
-        _dbContext = dbContext;
+        // Access the singleton instance of ApplicationDbContext
+        _dbContext = ApplicationDbContext.Instance;
 
-        //// Create the ReservationService instance
-        //var reservationService = new ReservationService();
-
-        //MainViewModel vm = new MainViewModel(reservationService);
-        //BindingContext = vm;
+        MainViewModel vm = new MainViewModel(_dbContext);
+        BindingContext = vm;
     }
 
         //  private void CreateReservation_Clicked(object sender, EventArgs e)

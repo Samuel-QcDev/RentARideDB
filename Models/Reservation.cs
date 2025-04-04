@@ -15,22 +15,18 @@ namespace RentARideDB.Models
 {
     public partial class Reservation : Reservation_BASE
     {
-        [PrimaryKey, AutoIncrement]
-        public int ReservationID { get; set; }
+
         public int BikeReturnStationID { get; set; }
         [ObservableProperty]
         private DateTime startTime;
         [ObservableProperty]
         private DateTime endTime;
 
-
-
-
         public Reservation()
         {
             
         }
-        public Reservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, string typeVehicule, string stationID, string vehiculeId)
+        public Reservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, string typeVehicule, int stationID, int vehiculeId)
         {
             this.MemberID = memberid;
             this.StartTime = Utils.RoundToNearest30Minutes(requestedStartTime);

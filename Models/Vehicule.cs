@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,32 +12,21 @@ using SQLite;
 
 namespace RentARideDB.Models
 {
-
     public partial class Vehicule : ObservableObject
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-        public string vehiculeId { get; set; }
-        public string vehiculeStationId {  get; set; }
-        // Navigation property to access the related Station
-        [Ignore] // Prevents AutoMapping for SQLite
-        public Station Station { get; set; }
+        public int vehiculeId { get; set; }
+        public int vehiculeStationId {  get; set; }
+        [Ignore] // Prevent SQLite from mapping this property as a column
+        public Station Station { get; set; } // Navigation property to Station (used for querying)
+        public int StationId { get; set; } // Foreign Key column
         public string type {  get; set; }
-        //[Ignore]  // Ignore this property for SQLite storage
-        //public List<AutoOption> AutoOptions { get; set; }
-
-        //[ObservableProperty]
-        //public string autoOptionsString;
+        public string categorieAuto { get; set; }
+        [Ignore]  // Ignore this property for SQLite storage
+        public List<AutoOption> AutoOptions { get; set; }
         public Vehicule()
         {
 
         }
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-
-        //void onPropertyChanged(string propertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
     }
 }

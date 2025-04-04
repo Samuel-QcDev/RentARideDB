@@ -10,8 +10,10 @@ namespace RentARideDB.Models
 
     public partial class Moto : Vehicule
     {
-        public Moto() { }
-        public Moto(string stationID)
+        public Moto() 
+        { 
+        }
+        public Moto(int stationID)
         {
             this.type = "Moto";
             this.vehiculeStationId = stationID;

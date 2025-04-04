@@ -10,13 +10,13 @@ namespace RentARideDB.Models
 {
     public partial class Velo : Vehicule
     {
-        public int BikeReturnStationID { get; set; }
+        //public int BikeReturnStationID { get; set; }
 
         public Velo()
         {
 
         }
-        public Velo(string stationID)
+        public Velo(int stationID)
         {
             this.type = "Velo";
             this.vehiculeStationId = stationID;

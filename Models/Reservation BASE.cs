@@ -11,7 +11,8 @@ namespace RentARideDB.Models
 {
     public partial class Reservation_BASE : ObservableObject
     {
-
+        [PrimaryKey, AutoIncrement]
+        public int ReservationID { get; set; }
         [ObservableProperty]
         private DateTime startDate;
         [ObservableProperty]
@@ -21,11 +22,11 @@ namespace RentARideDB.Models
         [ObservableProperty]
         private string categorieAuto;
         [ObservableProperty]
-        private string stationId;
+        private int stationId;
         [ObservableProperty]
         private string stationAddress;
         [ObservableProperty]
-        private string vehiculeID;
+        private int vehiculeID; // Foreign key to Vehicule
         [ObservableProperty]
         private string memberID;
         //[ObservableProperty]
@@ -37,7 +38,10 @@ namespace RentARideDB.Models
         public ObservableCollection<Reservation> Reservations { get; } = new();
         //[ObservableProperty]
         //public List<Vehicule> searchResults = new();
-
+        public Reservation_BASE()
+        {
+            
+        }
 
     }
 }

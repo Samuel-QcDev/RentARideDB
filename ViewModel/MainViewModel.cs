@@ -33,7 +33,7 @@ public partial class MainViewModel : LocalBaseViewModel
 
     public MainViewModel(ApplicationDbContext dbContext)
     {
-
+        _dbContext = dbContext;
     }
     public ReservationResult ResultDetails { get; set; }
     public ReservationSearchViewModel SearchViewModel { get; set; }

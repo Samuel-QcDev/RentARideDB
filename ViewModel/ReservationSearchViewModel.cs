@@ -86,8 +86,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public IRelayCommand<Vehicule> ReserveCommand { get; }
     public IRelayCommand<Reservation> CancelCommand { get; }
     private TimeSpan _startTime;
-    //public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
-    //public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
+    public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
+    public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
     public ObservableCollection<Vehicule> Vehicules { get; } = new();
     public ObservableCollection<Station> Stations { get; } = new();
 
@@ -148,7 +148,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             }
         }
     }
-    public bool IsCarAvailable(ObservableCollection<Reservation> reservations, string vehiculeID, DateTime newStartTime, DateTime newEndTime)
+    public bool IsCarAvailable(ObservableCollection<Reservation> reservations, int vehiculeID, DateTime newStartTime, DateTime newEndTime)
     {
         // Check for overlap with existing reservations for the same car
         foreach (var reservation in reservations)
@@ -166,6 +166,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
     public ReservationSearchViewModel(ApplicationDbContext dbContext)
     {
+        _dbContext = dbContext;
         //Console.WriteLine($"MemberEmail: {MemberEmail}, MemberPassword: {MemberPassword}, MemberFirstName: {MemberFirstName}");
 
         // Initialize the Commands for UI inputs
@@ -186,8 +187,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         ReservationDetails = new Reservation();
         ResultDetails = new ReservationResult();
 
-        _dbContext.ReservationsResultPast = new ObservableCollection<Reservation>();
-        _dbContext.ReservationsResultCurrent = new ObservableCollection<Reservation>();
+        ReservationsResultPast = new ObservableCollection<Reservation>();
+        ReservationsResultCurrent = new ObservableCollection<Reservation>();
 
         // Initialize some options
         StartDate = DateTime.Now.Date;
@@ -199,11 +200,11 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         ReservationSearchDetails.StationAddress = "All Stations";
         ReservationSearchDetails.CategorieAuto = "Essence";
 
-        LoadData();  // Load all the data (Vehicules, stations, reservations)
+        /*  LoadData();*/  // Load all the data (Vehicules, stations, reservations)
         AddVehiculesBasedOnAllUserInputs();     // Populate the CollectionView with vehicules according to initial conditions
         OnReservationAdded(); // Add the reservations to the correct CollectionView to display on MainPage or HistoriquePage 
-
-        //Console.WriteLine(MemberFirstName);
+                              //var vehicules = _dbContext.GetTableRows<Vehicule>("Vehicule");
+                              //Console.WriteLine(MemberFirstName);
 
         //if (MemberFirstName != null)
         //{
@@ -219,215 +220,215 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         //Console.WriteLine(Vehicules.Count);
         //DateChangedFlag = 0;
     }
-    public void  LoadData()
-    {
-        Vehicules.Clear();
-        //Total # of Vehicules : 102
-        //# of Autos : 74
-        CreerVehicule("Auto", "AU001","P001", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P001", "Essence", ["MP3", "AC"]);
-        CreerVehicule("Auto", "AU001", "P001", "Essence", ["GPS", "AC", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P001", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P001", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P001", "Électrique", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P002", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P002", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P002", "Essence", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P002", "Essence", ["MP3", "AC"]);
-        CreerVehicule("Auto", "AU001", "P002", "Essence", ["GPS", "AC", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P002", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P003", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P003", "Essence", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P003", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P004", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P004", "Essence", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P004", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P005", "Essence", ["GPS", "AC", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P005", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P005", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P006", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P006", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P006", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P006", "Essence", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P006", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P007", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P007", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P007", "Électrique", ["AC", "ChildSeat"]);
-        CreerVehicule("Auto", "AU001", "P007", "Essence", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P007", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P007", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P008", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P008", "Essence", ["MP3", "AC"]);
-        CreerVehicule("Auto", "AU001", "P008", "Essence", ["GPS", "AC", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P008", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P009", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P009", "Essence", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P009", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P009", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P009", "Essence", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P009", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P010", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P010", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P010", "Électrique", ["AC", "ChildSeat"]);
-        CreerVehicule("Auto", "AU001", "P010", "Essence", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P010", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P010", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P011", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P011", "Essence", ["MP3", "AC"]);
-        CreerVehicule("Auto", "AU001", "P011", "Essence", ["GPS", "AC", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P011", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P011", "Électrique", ["AC", "ChildSeat"]);
-        CreerVehicule("Auto", "AU001", "P011", "Essence", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P011", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P012", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P012", "Essence", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P012", "Essence", ["MP3", "AC"]);
-        CreerVehicule("Auto", "AU001", "P012", "Essence", ["GPS", "AC", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P012", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P013", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P013", "Essence", ["GPS", "MP3"]);
-        CreerVehicule("Auto", "AU001", "P013", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P013", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P013", "Essence", ["GPS", "AC"]);
-        CreerVehicule("Auto", "AU001", "P013", "Électrique", []);
-        CreerVehicule("Auto", "AU001", "P014", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P014", "Essence", []);
-        CreerVehicule("Auto", "AU001", "P014", "Électrique", []);
-        CreerVehicule("Auto", "P015", "AU001", "Essence", []);
-        CreerVehicule("Auto", "P015", "AU001", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "P015", "AU001", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "P015", "AU001", "Électrique", ["GPS", "AC"]);
-        CreerVehicule("Auto", "P015", "AU001", "Électrique", []);
+    //public void  LoadData()
+    //{
+    //    Vehicules.Clear();
+    //    //Total # of Vehicules : 102
+    //    //# of Autos : 74
+    //    CreerVehicule("Auto", "AU001","P001", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P001", "Essence", ["MP3", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P001", "Essence", ["GPS", "AC", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P001", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P001", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P001", "Électrique", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P002", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P002", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P002", "Essence", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P002", "Essence", ["MP3", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P002", "Essence", ["GPS", "AC", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P002", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P003", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P003", "Essence", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P003", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P004", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P004", "Essence", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P004", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P005", "Essence", ["GPS", "AC", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P005", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P005", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P006", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P006", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P006", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P006", "Essence", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P006", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P007", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P007", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P007", "Électrique", ["AC", "ChildSeat"]);
+    //    CreerVehicule("Auto", "AU001", "P007", "Essence", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P007", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P007", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P008", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P008", "Essence", ["MP3", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P008", "Essence", ["GPS", "AC", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P008", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P009", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P009", "Essence", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P009", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P009", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P009", "Essence", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P009", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P010", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P010", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P010", "Électrique", ["AC", "ChildSeat"]);
+    //    CreerVehicule("Auto", "AU001", "P010", "Essence", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P010", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P010", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P011", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P011", "Essence", ["MP3", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P011", "Essence", ["GPS", "AC", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P011", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P011", "Électrique", ["AC", "ChildSeat"]);
+    //    CreerVehicule("Auto", "AU001", "P011", "Essence", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P011", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P012", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P012", "Essence", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P012", "Essence", ["MP3", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P012", "Essence", ["GPS", "AC", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P012", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P013", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P013", "Essence", ["GPS", "MP3"]);
+    //    CreerVehicule("Auto", "AU001", "P013", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P013", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P013", "Essence", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "AU001", "P013", "Électrique", []);
+    //    CreerVehicule("Auto", "AU001", "P014", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P014", "Essence", []);
+    //    CreerVehicule("Auto", "AU001", "P014", "Électrique", []);
+    //    CreerVehicule("Auto", "P015", "AU001", "Essence", []);
+    //    CreerVehicule("Auto", "P015", "AU001", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "P015", "AU001", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "P015", "AU001", "Électrique", ["GPS", "AC"]);
+    //    CreerVehicule("Auto", "P015", "AU001", "Électrique", []);
 
-        //# of Motos : 16
-        CreerVehicule("Moto", "M001", "P001");
-        CreerVehicule("Moto", "M002", "P001");
-        CreerVehicule("Moto", "M003", "P002");
-        CreerVehicule("Moto", "M004", "P002");
-        CreerVehicule("Moto", "M005", "P003");
-        CreerVehicule("Moto", "M006", "P005");
-        CreerVehicule("Moto", "M007", "P006");
-        CreerVehicule("Moto", "M008", "P007");
-        CreerVehicule("Moto", "M009", "P007");
-        CreerVehicule("Moto", "M010", "P009");
-        CreerVehicule("Moto", "M011", "P011");
-        CreerVehicule("Moto", "M012", "P013");
-        CreerVehicule("Moto", "M013", "P013");
-        CreerVehicule("Moto", "M014", "P015");
-        CreerVehicule("Moto", "M015", "P015");
-        CreerVehicule("Moto", "M016", "P015");
+    //    //# of Motos : 16
+    //    CreerVehicule("Moto", "M001", "P001");
+    //    CreerVehicule("Moto", "M002", "P001");
+    //    CreerVehicule("Moto", "M003", "P002");
+    //    CreerVehicule("Moto", "M004", "P002");
+    //    CreerVehicule("Moto", "M005", "P003");
+    //    CreerVehicule("Moto", "M006", "P005");
+    //    CreerVehicule("Moto", "M007", "P006");
+    //    CreerVehicule("Moto", "M008", "P007");
+    //    CreerVehicule("Moto", "M009", "P007");
+    //    CreerVehicule("Moto", "M010", "P009");
+    //    CreerVehicule("Moto", "M011", "P011");
+    //    CreerVehicule("Moto", "M012", "P013");
+    //    CreerVehicule("Moto", "M013", "P013");
+    //    CreerVehicule("Moto", "M014", "P015");
+    //    CreerVehicule("Moto", "M015", "P015");
+    //    CreerVehicule("Moto", "M016", "P015");
 
-        //# of Velos : 12
-        CreerVehicule("Velo", "V001","P001");
-        CreerVehicule("Velo", "V002", "P002");
-        CreerVehicule("Velo", "V003", "P003");
-        CreerVehicule("Velo", "V004", "P004");
-        CreerVehicule("Velo", "V005", "P005");
-        CreerVehicule("Velo", "V006", "P006");
-        CreerVehicule("Velo", "V007", "P007");
-        CreerVehicule("Velo", "V008", "P008");
-        CreerVehicule("Velo", "V009", "P009");
-        CreerVehicule("Velo", "V010", "P010");
-        CreerVehicule("Velo", "V011", "P011");
-        CreerVehicule("Velo", "V012", "P012");
+    //    //# of Velos : 12
+    //    CreerVehicule("Velo", "V001","P001");
+    //    CreerVehicule("Velo", "V002", "P002");
+    //    CreerVehicule("Velo", "V003", "P003");
+    //    CreerVehicule("Velo", "V004", "P004");
+    //    CreerVehicule("Velo", "V005", "P005");
+    //    CreerVehicule("Velo", "V006", "P006");
+    //    CreerVehicule("Velo", "V007", "P007");
+    //    CreerVehicule("Velo", "V008", "P008");
+    //    CreerVehicule("Velo", "V009", "P009");
+    //    CreerVehicule("Velo", "V010", "P010");
+    //    CreerVehicule("Velo", "V011", "P011");
+    //    CreerVehicule("Velo", "V012", "P012");
 
-        //# of Stations : 15
-        CreerStation(0, "P001", "Dorchester-Charest", 10, 2);
-        CreerStation(1, "P002", "Carre D'Youville", 10, 2);
-        CreerStation(2, "P003", "Limoilou", 5, 1);
-        CreerStation(3, "P004", "Saint-Roch", 4, 1);
-        CreerStation(4, "P005", "Beauport", 5, 1);
-        CreerStation(5, "P006", "Vanier", 8, 2);
-        CreerStation(6, "P007", "Vieux-Quebec - Plaines d'Abraham", 10, 2);
-        CreerStation(7, "P008", "Vieux-Quebec - St-Jean", 6, 2);
-        CreerStation(8, "P009", "Charlesbourg", 9, 2);
-        CreerStation(9, "P010", "ULaval", 8, 2);
-        CreerStation(10, "P011", "Sainte-Foy", 9, 1);
-        CreerStation(11, "P012", "Sillery", 8, 3);
-        CreerStation(12, "P013", "Levis", 10, 2);
-        CreerStation(13, "P014", "Cap-Rouge", 6, 3);
-        CreerStation(14, "P015", "Chutes Montmorency", 10, 1);
+    //    //# of Stations : 15
+    //    CreerStation("Dorchester-Charest", 10, 2);
+    //    CreerStation("Carre D'Youville", 10, 2);
+    //    CreerStation("Limoilou", 5, 1);
+    //    CreerStation("Saint-Roch", 4, 1);
+    //    CreerStation("Beauport", 5, 1);
+    //    CreerStation("Vanier", 8, 2);
+    //    CreerStation("Vieux-Quebec - Plaines d'Abraham", 10, 2);
+    //    CreerStation("Vieux-Quebec - St-Jean", 6, 2);
+    //    CreerStation("Charlesbourg", 9, 2);
+    //    CreerStation("ULaval", 8, 2);
+    //    CreerStation("Sainte-Foy", 9, 1);
+    //    CreerStation("Sillery", 8, 3);
+    //    CreerStation("Levis", 10, 2);
+    //    CreerStation("Cap-Rouge", 6, 3);
+    //    CreerStation("Chutes Montmorency", 10, 1);
 
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU002", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto("AU005", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto("AU002", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(30), new Auto("AU011", "P002", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto("AU023", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(30), new Auto("AU023", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(1), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto("AU023", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(3), DateTime.Today.AddDays(2).AddHours(4).AddMinutes(0), new Auto("AU023", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU027", "P007", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto("AU036", "P008", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddHours(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("AU041", "P009", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("AU062", "P013", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("AU074", "P015", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU049", "P011", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU0055", "P011", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU056", "P012", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU038", "P009", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU039", "P009", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU024", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU025", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU026", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU028", "P007", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU029", "P007", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU042", "P009", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU043", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU044", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU045", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU046", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("AU047", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("M01", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto("M16", "P015", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("M02", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto("M05", "P003", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(0), DateTime.Today.AddDays(1).AddHours(2).AddMinutes(0), new Auto("M05", "P003", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto("M12", "P013", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("M15", "P015", "Essence", []    ));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto("V01", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(30), new Auto("V01", "P001", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("V03", "P003", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(8).AddMinutes(0), new Auto("V03", "P003", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto("V06", "P006", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("V07", "P007", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("V08", "P008", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("V09", "P009", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto("V09", "P009", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("V10", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(0), new Auto("V10", "P010", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Auto("V11", "P011", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto("V12", "P012", "Essence", []));
-        CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Auto("V12", "P012", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(30), new Auto("P002", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(30), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(1), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(3), DateTime.Today.AddDays(2).AddHours(4).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P007", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto("P008", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddHours(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("P009", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("P013", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("P015", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P011", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P011", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P012", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P009", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P009", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P007", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P007", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P009", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto("P015", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto("P003", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(0), DateTime.Today.AddDays(1).AddHours(2).AddMinutes(0), new Auto("P003", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto("P013", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P015", "Essence", []    ));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(30), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P003", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(8).AddMinutes(0), new Auto("P003", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto("P006", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P007", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P008", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P009", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto("P009", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(0), new Auto("P010", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Auto("P011", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto("P012", "Essence", []));
+    //    CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Auto("P012", "Essence", []));
 
-        // Past Reservations
-        CreerReservation("MEM007", new DateTime(2025,03,11,10,30,0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto("AU005", "P001", "Essence", []));
-        CreerReservation("MEM007", new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Auto("AU005", "P002", "Essence", []));
-        CreerReservation("MEM007", new DateTime(2025, 03, 17, 10, 00, 0), new DateTime(2025, 03, 17, 11, 30, 0), new Auto("AU005", "P015", "Essence", []));
-        CreerReservation("MEM001", new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto("AU005", "P001", "Essence", []));
-        CreerReservation("MEM005", new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto("AU005", "P001", "Essence", []));
-    }
+    //    // Past Reservations
+    //    CreerReservation("MEM007", new DateTime(2025,03,11,10,30,0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM007", new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Auto("P002", "Essence", []));
+    //    CreerReservation("MEM007", new DateTime(2025, 03, 17, 10, 00, 0), new DateTime(2025, 03, 17, 11, 30, 0), new Auto("P015", "Essence", []));
+    //    CreerReservation("MEM001", new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto("P001", "Essence", []));
+    //    CreerReservation("MEM005", new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto("P001", "Essence", []));
+    //}
 
-   //List of all vehicules
-    Vehicule[] myVehicules = new Vehicule[110];
+    ////List of all vehicules
+    // Vehicule[] myVehicules = new Vehicule[110];
 
-     // Method Create a Vehicule and add it to list of all vehicules
-    public async void CreerVehicule(string type, string vehiculeID, string stationID, string categorie = null, List<string> carOptions=null)
+    //Method Create a Vehicule and add it to list of all vehicules
+    public async void CreerVehicule(string type, string vehiculeID, int stationID, string categorie = null, List<string> carOptions = null)
     {
         if (type == "Auto")
         {
             // Create the auto
-            var vehicule = new Auto(vehiculeID, stationID, categorie, carOptions);
+            var vehicule = new Auto(stationID, categorie, carOptions);
             // Insert the auto in the database
             await _dbContext.CreateAsync(vehicule);
+            Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
             // Insert AutoOptions into the AutoOption table
             foreach (var option in carOptions)
             {
                 var autoOption = new AutoOption
                 {
                     Option = option,
-                    AutoId = vehicule.autoId  // Foreign key reference to the Auto
+                    AutoId = vehicule.vehiculeId  // Foreign key reference to the Auto
                 };
-
                 await _dbContext.CreateAsync(autoOption);
             }
         }
@@ -435,13 +436,15 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         {
             var vehicule = new Velo(stationID);
             await _dbContext.CreateAsync(vehicule);
+            Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
         }
-        else if(type == "Moto")
+        else if (type == "Moto")
         {
             var vehicule = new Moto(stationID);
             await _dbContext.CreateAsync(vehicule);
-        }
+            Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
 
+        }
         //Vehicules.Add(myVehicules[index]);
     }
     public async void creerMembre(string name, string password, string email)
@@ -451,10 +454,10 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     //List of all stations
     Station[] myStations = new Station[20];
     // Method to create a Station and add it to list of all stations
-    public async void CreerStation(int index, string id, string address, int spaces, int bikeSpaces)
+    public async void CreerStation(string address, int spaces, int bikeSpaces)
     {
-        myStations[index] = new Station(index, id, address, spaces, bikeSpaces);
-        await _dbContext.CreateAsync(new Station(index, id, address, spaces, bikeSpaces));
+        //myStations[index] = new Station(index, id, address, spaces, bikeSpaces);
+        await _dbContext.CreateAsync(new Station(address, spaces, bikeSpaces));
     }
     public async void CreerReservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
     {
@@ -577,53 +580,116 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
 
     // Main method to filter vehicules based on criteria
-    private void AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
+    private async Task AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
     {
         Vehicules.Clear(); // Clear the Vehicules CollectionView
-        StationDetails.selectedStationID.Clear();
-        // Iterate over all stations to verify selected station(s)
-        for (int i = myStations.Length - 1; i >= 0; i--)
+        StationDetails.selectedStationID.Clear(); // Clear selected stations
+
+        // Fetch stations from the database based on the user's selected station address
+        var stations = await _dbContext.GetStationsAsync();
+
+        if (ReservationSearchDetails.StationAddress != "All Stations")
         {
-            if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (ReservationSearchDetails.StationAddress == "All Stations"))
-            {
-                StationDetails.selectedStationID.Add(myStations[i].StationId);
-            }
-            else if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (myStations[i].StationAddress == ReservationSearchDetails.StationAddress))
-            {
-                StationDetails.selectedStationID.Add(myStations[i].StationId);
-            }
+            stations = stations.Where(station => station.StationAddress == ReservationSearchDetails.StationAddress).ToList();
         }
 
-        // Iterate over all vehhicules to check if it meets the criteria set by user
-        for (int i = myVehicules.Length - 1; i >= 0; i--)
+        var selectedStations = stations.ToList();
+
+        // Add the selected stations to the StationDetails list
+        foreach (var station in selectedStations)
         {
-            if (myVehicules[i] != null)
+            StationDetails.selectedStationID.Add(station.StationId);
+        }
+        List<Vehicule> selectedVehicles;
+        // Fetch vehicles from the database
+        var AllVehicules = await _dbContext.GetVehiculesAsync();
+
+        // Filter by vehicle type if it's not "All"
+        if (ReservationSearchDetails.TypeVehicule != "All")
+        {
+            // Filter the list using LINQ if it's already in memory (List<Vehicle>)
+            selectedVehicles = AllVehicules.Where(v => v.type == ReservationSearchDetails.TypeVehicule).ToList();
+        }
+        else
+        {
+            // If "All" is selected, no filtering is applied
+            selectedVehicles = AllVehicules.ToList();
+        }
+
+        // Iterate through vehicles and apply checks
+        foreach (var vehicule in selectedVehicles)
+        {
+            if (vehicule != null)
             {
+                // If the selected vehicle type is "Auto"
                 if (ReservationSearchDetails.TypeVehicule == "Auto")
                 {
                     IsAutoSelected = true;
-                    if (myVehicules[i].type == "Auto")
+                    // Check if the vehicle is of type "Auto" and matches the category and options
+                    if (vehicule.type == "Auto" && CheckCategorieAuto(vehicule) && await CheckOptions(vehicule, optionsChecked))
                     {
-                        if (CheckCategorieAuto(myVehicules[i]))
-                        {
-                            if (CheckOptions(myVehicules[i], i, optionsChecked))
-                            {
-                                CheckStation(myVehicules[i]);
-                            }
-                        }
+                        CheckStation(vehicule);
                     }
                 }
                 else
                 {
+                    // If the selected type is not "Auto", simply match based on the type
                     IsAutoSelected = false;
-                    if (ReservationSearchDetails.TypeVehicule == myVehicules[i].type)
+                    if (ReservationSearchDetails.TypeVehicule == vehicule.type)
                     {
-                        CheckStation(myVehicules[i]);
+                        CheckStation(vehicule);
                     }
                 }
             }
         }
     }
+    //private void AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
+    //{
+    //    Vehicules.Clear(); // Clear the Vehicules CollectionView
+    //    StationDetails.selectedStationID.Clear();
+    //    // Iterate over all stations to verify selected station(s)
+    //    for (int i = myStations.Length - 1; i >= 0; i--)
+    //    {
+    //        if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (ReservationSearchDetails.StationAddress == "All Stations"))
+    //        {
+    //            StationDetails.selectedStationID.Add(myStations[i].StationId);
+    //        }
+    //        else if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (myStations[i].StationAddress == ReservationSearchDetails.StationAddress))
+    //        {
+    //            StationDetails.selectedStationID.Add(myStations[i].StationId);
+    //        }
+    //    }
+
+        //    // Iterate over all vehhicules to check if it meets the criteria set by user
+        //    for (int i = myVehicules.Length - 1; i >= 0; i--)
+        //    {
+        //        if (myVehicules[i] != null)
+        //        {
+        //            if (ReservationSearchDetails.TypeVehicule == "Auto")
+        //            {
+        //                IsAutoSelected = true;
+        //                if (myVehicules[i].type == "Auto")
+        //                {
+        //                    if (CheckCategorieAuto(myVehicules[i]))
+        //                    {
+        //                        if (CheckOptions(myVehicules[i], i, optionsChecked))
+        //                        {
+        //                            CheckStation(myVehicules[i]);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                IsAutoSelected = false;
+        //                if (ReservationSearchDetails.TypeVehicule == myVehicules[i].type)
+        //                {
+        //                    CheckStation(myVehicules[i]);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
     private bool CheckCategorieAuto(Vehicule vehicule)
     {
         string selectedCategory = CategorieAuto;
@@ -642,63 +708,106 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             return (autoVehicule.categorieAuto == selectedCategory);
         return false;
     }
-    private bool CheckOptions(Vehicule vehicule, int index, string checkedOption = "")
-    {
-        ReservationSearchDetails.indexVehiculesToBeRemoved.Clear();
+    private async Task<bool> CheckOptions(Vehicule vehicule, string checkedOption = "")
+{
+    // Get the selected options from the UI
+    HashSet<string> addOptions = new HashSet<string>();
+    HashSet<string> removalOptions = new HashSet<string>();
 
-        HashSet<string> addOptions = new HashSet<string> { };
-        HashSet<string> removalOptions = new HashSet<string> { };
+    // Assuming that IsCheckedMP3, IsCheckedAC, etc. are boolean flags based on user selections
+    if (IsCheckedMP3) addOptions.Add("MP3");
+    if (IsCheckedAC) addOptions.Add("AC");
+    if (IsCheckedGPS) addOptions.Add("GPS");
+    if (IsCheckedChildSeat) addOptions.Add("ChildSeat");
 
-        if (IsCheckedMP3) addOptions.Add("MP3");
-        if (IsCheckedAC) addOptions.Add("AC");
-        if (IsCheckedGPS) addOptions.Add("GPS");
-        if (IsCheckedChildSeat) addOptions.Add("ChildSeat");
+    if (!string.IsNullOrEmpty(checkedOption))
+        removalOptions.Add(checkedOption);
 
-        if (checkedOption != "")
-            removalOptions.Add(checkedOption);
+    // Fetch the AutoOptions from the database for the current vehicle (Auto)
+    var autoOptions = await _dbContext._dbConnection
+        .Table<AutoOption>()
+        .Where(option => option.AutoId == vehicule.vehiculeId)  // Make sure the AutoOption belongs to this Auto
+        .ToListAsync();
 
+    // Convert the list of AutoOptions to a HashSet for easy comparison
+    HashSet<string> vehicleOptions = new HashSet<string>(autoOptions.Select(option => option.Option));
+
+    // Determine if the vehicle has all the selected options
+    bool allValuesInList = addOptions.All(item => vehicleOptions.Contains(item));
+    bool anyValueInList = addOptions.Any(item => vehicleOptions.Contains(item));
+    bool containsAnyValue = removalOptions.Any(item => vehicleOptions.Contains(item));
+
+    // If any removal option is selected, the vehicle should be excluded
+    if (containsAnyValue)
+        return false;
+
+    // If no options are checked, and the vehicle has no options, it's valid
+    if (addOptions.Count == 0 && vehicleOptions.Count == 0)
         return true;
 
-        //bool allValuesInList = addOptions.All(item => vehicule.AutoOptions.Contains(item));
-        //bool AnyValueInList = addOptions.Any(item => vehicule.AutoOptions.Contains(item));
-        //bool containsAnyValue = removalOptions.Any(item => vehicule.AutoOptions.Contains(item));
-
-        //bool containsValueChecked = vehicule.AutoOptions.Contains(optionsChecked);
-        //bool containsNoOption = vehicule.AutoOptions.Count == 0;
-
-        // If option was just unchecked, don't add cars with that option
-        //if (containsAnyValue)
-        //    return false;
-
-        //// If vehicule has no options and no option is checked, it is added
-        //if (addOptions.Count == 0)
-        //{
-        //    if (containsNoOption) return true;
-        //    return false;
-
-        //}
-        //// allValuesInList : each vehicule must have ALL checked options, or
-        //// AnyValueInList : each vehicule must have ONE of the checked options
-        //if (allValuesInList && !containsNoOption)
-        //{
-        //    return true;
-        //}
-        //return false;
+    // If all the selected options are present and the vehicle doesn't have any options, it's valid
+    if (allValuesInList && vehicleOptions.Count > 0)
+    {
+        return true;
     }
+
+    return false;
+}
+    //private bool CheckOptions(Vehicule vehicule, int index, string checkedOption = "")
+    //{
+    //    ReservationSearchDetails.indexVehiculesToBeRemoved.Clear();
+
+    //    HashSet<string> addOptions = new HashSet<string> { };
+    //    HashSet<string> removalOptions = new HashSet<string> { };
+
+    //    if (IsCheckedMP3) addOptions.Add("MP3");
+    //    if (IsCheckedAC) addOptions.Add("AC");
+    //    if (IsCheckedGPS) addOptions.Add("GPS");
+    //    if (IsCheckedChildSeat) addOptions.Add("ChildSeat");
+
+    //    if (checkedOption != "")
+    //        removalOptions.Add(checkedOption);
+
+    //    bool allValuesInList = addOptions.All(item => vehicule.AutoOptions.Contains(item));
+    //    bool AnyValueInList = addOptions.Any(item => vehicule.AutoOptions.Contains(item));
+    //    bool containsAnyValue = removalOptions.Any(item => vehicule.AutoOptions.Contains(item));
+
+    //    //bool containsValueChecked = vehicule.AutoOptions.Contains(optionsChecked);
+    //    bool containsNoOption = vehicule.AutoOptions.Count == 0;
+
+    //    //If option was just unchecked, don't add cars with that option
+    //    if (containsAnyValue)
+    //        return false;
+
+    //    // If vehicule has no options and no option is checked, it is added
+    //    if (addOptions.Count == 0)
+    //    {
+    //        if (containsNoOption) return true;
+    //        return false;
+
+    //    }
+    //    // allValuesInList : each vehicule must have ALL checked options, or
+    //    // AnyValueInList : each vehicule must have ONE of the checked options
+    //    if (allValuesInList && !containsNoOption)
+    //    {
+    //        return true;
+    //    }
+    //    return false;
+    //    }
     private async void CheckStation(Vehicule vehicule)
     {
         // Check if vehicule (from myVehicules[i] above) is at a selected station & if it is available
-        foreach (string station in StationDetails.selectedStationID)
+        foreach (int station in StationDetails.selectedStationID)
         {
             if (vehicule.vehiculeStationId == station)
             {
-                if (IsCarAvailable(ReservationDetails.Reservations, vehicule.vehiculeId, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime))
-                {
+                //if (IsCarAvailable(ReservationDetails.Reservations, vehicule.vehiculeId, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime))
+                //{
                     // Add the vehicule directly to the CollectionView
                     Vehicules.Add(vehicule);
                     //await _dbContext.CreateAsync(vehicule);
                     //ReservationSearchDetails.indexVehiculesToBeAdded.Add(i);
-                }
+                //}
             }
         }
     }
@@ -711,8 +820,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     //}
     private void OnReservationAdded()
     {
-        _dbContext.ReservationsResultPast.Clear();
-        _dbContext.ReservationsResultCurrent.Clear();
+        ReservationsResultPast.Clear();
+        ReservationsResultCurrent.Clear();
         foreach (Reservation reservation in ReservationDetails.Reservations)
         {
             if ((reservation != null) && (reservation.MemberID == "MEM007") && (!(_dbContext.ReservationsResultPast.Contains(reservation))|| !(_dbContext.ReservationsResultCurrent.Contains(reservation))))
