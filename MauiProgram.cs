@@ -23,7 +23,7 @@ public static class MauiProgram
 
         // Services
         builder.Services.AddSingleton<ApplicationDbContext>();
-        builder.Services.AddSingleton<ReservationService>();
+        //builder.Services.AddSingleton<ReservationService>();
 
 
         // Views

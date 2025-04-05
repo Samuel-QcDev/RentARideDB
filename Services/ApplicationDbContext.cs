@@ -80,16 +80,14 @@ namespace RentARideDB.Services
             var tableNames = new List<string>
     {
         "Vehicule",
-        "Auto",
-        "Moto",
-        "Velo",
+        //"Auto",
+        //"Moto",
+        //"Velo",
         "Station",
         "Login",
         "AutoOption",
         "Reservation",
-        "ReservationResult",
-        "Membre",
-        "ReservationSearch"
+        "Membre"
     };
 
             foreach (var tableName in tableNames)
@@ -102,6 +100,14 @@ namespace RentARideDB.Services
                         Console.WriteLine($"Table {tableName} does not exist. Creating the table...");
                         switch (tableName)
                         {
+                            case "Vehicule":
+                                await _dbConnection.CreateTableAsync<Vehicule>();
+                                Console.WriteLine("Vehicule table created.");
+                                break;
+                            case "Login":
+                                await _dbConnection.CreateTableAsync<Login>();
+                                Console.WriteLine("Login table created.");
+                                break;
                             case "Auto":
                                 await _dbConnection.CreateTableAsync<Auto>();
                                 Console.WriteLine("Auto table created.");
@@ -346,198 +352,192 @@ namespace RentARideDB.Services
         private async Task SeedDataAsync()
         {
             Console.WriteLine("SeedDataAsync() starting...");
-            var autoCount = await _dbConnection.Table<Auto>().CountAsync();
-            if (autoCount == 0)
+            var vehiculeCount = await _dbConnection.Table<Vehicule>().CountAsync();
+            if (vehiculeCount == 0)
             {
-                CreerVehicule("Auto", 001, 001, "Essence", []);
-                CreerVehicule("Auto", 001, 001, "Essence", ["MP3", "AC"]);
-                CreerVehicule("Auto", 001, 001, "Essence", ["GPS", "AC", "MP3"]);
-                CreerVehicule("Auto", 001, 001, "Essence", []);
-                CreerVehicule("Auto", 001, 001, "Électrique", []);
-                CreerVehicule("Auto", 001, 001, "Électrique", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 002, "Essence", []);
-                CreerVehicule("Auto", 001, 002, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 002, "Essence", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 002, "Essence", ["MP3", "AC"]);
-                CreerVehicule("Auto", 001, 002, "Essence", ["GPS", "AC", "MP3"]);
-                CreerVehicule("Auto", 001, 002, "Électrique", []);
-                CreerVehicule("Auto", 001, 003, "Essence", []);
-                CreerVehicule("Auto", 001, 003, "Essence", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 003, "Électrique", []);
-                CreerVehicule("Auto", 001, 004, "Essence", []);
-                CreerVehicule("Auto", 001, 004, "Essence", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 004, "Électrique", []);
-                CreerVehicule("Auto", 001, 005, "Essence", ["GPS", "AC", "MP3"]);
-                CreerVehicule("Auto", 001, 005, "Essence", []);
-                CreerVehicule("Auto", 001, 005, "Électrique", []);
-                CreerVehicule("Auto", 001, 006, "Essence", []);
-                CreerVehicule("Auto", 001, 006, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 006, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 006, "Essence", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 006, "Électrique", []);
-                CreerVehicule("Auto", 001, 007, "Essence", []);
-                CreerVehicule("Auto", 001, 007, "Essence", []);
-                CreerVehicule("Auto", 001, 007, "Électrique", ["AC", "ChildSeat"]);
-                CreerVehicule("Auto", 001, 007, "Essence", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 007, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 007, "Électrique", []);
-                CreerVehicule("Auto", 001, 008, "Essence", []);
-                CreerVehicule("Auto", 001, 008, "Essence", ["MP3", "AC"]);
-                CreerVehicule("Auto", 001, 008, "Essence", ["GPS", "AC", "MP3"]);
-                CreerVehicule("Auto", 001, 008, "Électrique", []);
-                CreerVehicule("Auto", 001, 009, "Essence", []);
-                CreerVehicule("Auto", 001, 009, "Essence", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 009, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 009, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 009, "Essence", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 009, "Électrique", []);
-                CreerVehicule("Auto", 001, 010, "Essence", []);
-                CreerVehicule("Auto", 001, 010, "Essence", []);
-                CreerVehicule("Auto", 001, 010, "Électrique", ["AC", "ChildSeat"]);
-                CreerVehicule("Auto", 001, 010, "Essence", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 010, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 010, "Électrique", []);
-                CreerVehicule("Auto", 001, 011, "Essence", []);
-                CreerVehicule("Auto", 001, 011, "Essence", ["MP3", "AC"]);
-                CreerVehicule("Auto", 001, 011, "Essence", ["GPS", "AC", "MP3"]);
-                CreerVehicule("Auto", 001, 011, "Essence", []);
-                CreerVehicule("Auto", 001, 011, "Électrique", ["AC", "ChildSeat"]);
-                CreerVehicule("Auto", 001, 011, "Essence", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 011, "Électrique", []);
-                CreerVehicule("Auto", 001, 012, "Essence", []);
-                CreerVehicule("Auto", 001, 012, "Essence", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 012, "Essence", ["MP3", "AC"]);
-                CreerVehicule("Auto", 001, 012, "Essence", ["GPS", "AC", "MP3"]);
-                CreerVehicule("Auto", 001, 012, "Électrique", []);
-                CreerVehicule("Auto", 001, 013, "Essence", []);
-                CreerVehicule("Auto", 001, 013, "Essence", ["GPS", "MP3"]);
-                CreerVehicule("Auto", 001, 013, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 013, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 013, "Essence", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 013, "Électrique", []);
-                CreerVehicule("Auto", 001, 014, "Essence", []);
-                CreerVehicule("Auto", 001, 014, "Essence", []);
-                CreerVehicule("Auto", 001, 014, "Électrique", []);
-                CreerVehicule("Auto", 001, 014, "Essence", []);
-                CreerVehicule("Auto", 001, 015, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 015, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 015, "Électrique", ["GPS", "AC"]);
-                CreerVehicule("Auto", 001, 015, "Électrique", []);
-            }
-            var veloCount = await _dbConnection.Table<Velo>().CountAsync();
-            if (veloCount == 0)
-            {
-                CreerVehicule("Velo", 001, 001);
-                CreerVehicule("Velo", 002, 002);
-                CreerVehicule("Velo", 003, 003);
-                CreerVehicule("Velo", 004, 004);
-                CreerVehicule("Velo", 005, 005);
-                CreerVehicule("Velo", 006, 006);
-                CreerVehicule("Velo", 007, 007);
-                CreerVehicule("Velo", 008, 008);
-                CreerVehicule("Velo", 009, 009);
-                CreerVehicule("Velo", 010, 010);
-                CreerVehicule("Velo", 011, 011);
-                CreerVehicule("Velo", 012, 012);
-            }
-            var motoCount = await _dbConnection.Table<Moto>().CountAsync();
-            if (motoCount == 0)
-            {
-                CreerVehicule("Moto", 001, 001);
-                CreerVehicule("Moto", 002, 001);
-                CreerVehicule("Moto", 003, 002);
-                CreerVehicule("Moto", 004, 002);
-                CreerVehicule("Moto", 005, 003);
-                CreerVehicule("Moto", 006, 005);
-                CreerVehicule("Moto", 007, 006);
-                CreerVehicule("Moto", 008, 007);
-                CreerVehicule("Moto", 009, 007);
-                CreerVehicule("Moto", 010, 009);
-                CreerVehicule("Moto", 011, 011);
-                CreerVehicule("Moto", 012, 013);
-                CreerVehicule("Moto", 013, 013);
-                CreerVehicule("Moto", 014, 015);
-                CreerVehicule("Moto", 015, 015);
-                CreerVehicule("Moto", 016, 015);
+                await CreerVehicule("Auto", 1, "Essence", []);
+                await CreerVehicule("Auto", 1, "Essence", ["MP3", "AC"]);
+                await CreerVehicule("Auto", 1, "Essence", ["GPS", "AC", "MP3"]);
+                await CreerVehicule("Auto", 1, "Essence", []);
+                await CreerVehicule("Auto", 1, "Électrique", []);
+                await CreerVehicule("Auto", 1, "Électrique", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 2, "Essence", []);
+                await CreerVehicule("Auto", 2, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 2, "Essence", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 2, "Essence", ["MP3", "AC"]);
+                await CreerVehicule("Auto", 2, "Essence", ["GPS", "AC", "MP3"]);
+                await CreerVehicule("Auto", 2, "Électrique", []);
+                await CreerVehicule("Auto", 3, "Essence", []);
+                await CreerVehicule("Auto", 3, "Essence", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 3, "Électrique", []);
+                await CreerVehicule("Auto", 4, "Essence", []);
+                await CreerVehicule("Auto", 4, "Essence", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 4, "Électrique", []);
+                await CreerVehicule("Auto", 5, "Essence", ["GPS", "AC", "MP3"]);
+                await CreerVehicule("Auto", 5, "Essence", []);
+                await CreerVehicule("Auto", 5, "Électrique", []);
+                await CreerVehicule("Auto", 6, "Essence", []);
+                await CreerVehicule("Auto", 6, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 6, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 6, "Essence", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 6, "Électrique", []);
+                await CreerVehicule("Auto", 7, "Essence", []);
+                await CreerVehicule("Auto", 7, "Essence", []);
+                await CreerVehicule("Auto", 7, "Électrique", ["AC", "ChildSeat"]);
+                await CreerVehicule("Auto", 7, "Essence", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 7, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 7, "Électrique", []);
+                await CreerVehicule("Auto", 8, "Essence", []);
+                await CreerVehicule("Auto", 8, "Essence", ["MP3", "AC"]);
+                await CreerVehicule("Auto", 8, "Essence", ["GPS", "AC", "MP3"]);
+                await CreerVehicule("Auto", 8, "Électrique", []);
+                await CreerVehicule("Auto", 9, "Essence", []);
+                await CreerVehicule("Auto", 9, "Essence", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 9, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 9, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 9, "Essence", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 9, "Électrique", []);
+                await CreerVehicule("Auto", 10, "Essence", []);
+                await CreerVehicule("Auto", 10, "Essence", []);
+                await CreerVehicule("Auto", 10, "Électrique", ["AC", "ChildSeat"]);
+                await CreerVehicule("Auto", 10, "Essence", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 10, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 10, "Électrique", []);
+                await CreerVehicule("Auto", 11, "Essence", []);
+                await CreerVehicule("Auto", 11, "Essence", ["MP3", "AC"]);
+                await CreerVehicule("Auto", 11, "Essence", ["GPS", "AC", "MP3"]);
+                await CreerVehicule("Auto", 11, "Essence", []);
+                await CreerVehicule("Auto", 11, "Électrique", ["AC", "ChildSeat"]);
+                await CreerVehicule("Auto", 11, "Essence", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 11, "Électrique", []);
+                await CreerVehicule("Auto", 12, "Essence", []);
+                await CreerVehicule("Auto", 12, "Essence", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 12, "Essence", ["MP3", "AC"]);
+                await CreerVehicule("Auto", 12, "Essence", ["GPS", "AC", "MP3"]);
+                await CreerVehicule("Auto", 12, "Électrique", []);
+                await CreerVehicule("Auto", 13, "Essence", []);
+                await CreerVehicule("Auto", 13, "Essence", ["GPS", "MP3"]);
+                await CreerVehicule("Auto", 13, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 13, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 13, "Essence", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 13, "Électrique", []);
+                await CreerVehicule("Auto", 14, "Essence", []);
+                await CreerVehicule("Auto", 14, "Essence", []);
+                await CreerVehicule("Auto", 14, "Électrique", []);
+                await CreerVehicule("Auto", 14, "Essence", []);
+                await CreerVehicule("Auto", 15, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 15, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 15, "Électrique", ["GPS", "AC"]);
+                await CreerVehicule("Auto", 15, "Électrique", []);
+
+                await CreerVehicule("Velo", 1);
+                await CreerVehicule("Velo", 2);
+                await CreerVehicule("Velo", 3);
+                await CreerVehicule("Velo", 4);
+                await CreerVehicule("Velo", 5);
+                await CreerVehicule("Velo", 6);
+                await CreerVehicule("Velo", 7);
+                await CreerVehicule("Velo", 8);
+                await CreerVehicule("Velo", 9);
+                await CreerVehicule("Velo", 10);
+                await CreerVehicule("Velo", 11);
+                await CreerVehicule("Velo", 12);
+  
+                await CreerVehicule("Moto", 1);
+                await CreerVehicule("Moto", 1);
+                await CreerVehicule("Moto", 2);
+                await CreerVehicule("Moto", 2);
+                await CreerVehicule("Moto", 3);
+                await CreerVehicule("Moto", 5);
+                await CreerVehicule("Moto", 6);
+                await CreerVehicule("Moto", 7);
+                await CreerVehicule("Moto", 7);
+                await CreerVehicule("Moto", 9);
+                await CreerVehicule("Moto", 11);
+                await CreerVehicule("Moto", 13);
+                await CreerVehicule("Moto", 13);
+                await CreerVehicule("Moto", 15);
+                await CreerVehicule("Moto", 15);
+                await CreerVehicule("Moto", 15);
             }
             var stationCount = await _dbConnection.Table<Station>().CountAsync();
             if (stationCount == 0)
             {
-                CreerStation("Dorchester-Charest", 10, 2);
-                CreerStation("Carre D'Youville", 10, 2);
-                CreerStation("Limoilou", 5, 1);
-                CreerStation("Saint-Roch", 4, 1);
-                CreerStation("Beauport", 5, 1);
-                CreerStation("Vanier", 8, 2);
-                CreerStation("Vieux-Quebec - Plaines d'Abraham", 10, 2);
-                CreerStation("Vieux-Quebec - St-Jean", 6, 2);
-                CreerStation("Charlesbourg", 9, 2);
-                CreerStation("ULaval", 8, 2);
-                CreerStation("Sainte-Foy", 9, 1);
-                CreerStation("Sillery", 8, 3);
-                CreerStation("Levis", 10, 2);
-                CreerStation("Cap-Rouge", 6, 3);
-                CreerStation("Chutes Montmorency", 10, 1);
+                await CreerStation("Dorchester-Charest", 10, 2);
+                await CreerStation("Carre D'Youville", 10, 2);
+                await CreerStation("Limoilou", 5, 1);
+                await CreerStation("Saint-Roch", 4, 1);
+                await CreerStation("Beauport", 5, 1);
+                await CreerStation("Vanier", 8, 2);
+                await CreerStation("Vieux-Quebec - Plaines d'Abraham", 10, 2);
+                await CreerStation("Vieux-Quebec - St-Jean", 6, 2);
+                await CreerStation("Charlesbourg", 9, 2);
+                await CreerStation("ULaval", 8, 2);
+                await CreerStation("Sainte-Foy", 9, 1);
+                await CreerStation("Sillery", 8, 3);
+                await CreerStation("Levis", 10, 2);
+                await CreerStation("Cap-Rouge", 6, 3);
+                await CreerStation("Chutes Montmorency", 10, 1);
             }
             var reservationCount = await _dbConnection.Table<Reservation>().CountAsync();
             if (reservationCount == 0)
             {
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(30), new Auto(002, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(30), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(1), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(3), DateTime.Today.AddDays(2).AddHours(4).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto(008, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddHours(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(009, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(013, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(015, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(011, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(011, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(012, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto(015, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto(003, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(0), DateTime.Today.AddDays(1).AddHours(2).AddMinutes(0), new Auto(003, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto(013, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(015, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(30), new Auto(001, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(003, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(8).AddMinutes(0), new Auto(003, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto(006, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(008, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto(009, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(0), new Auto(010, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Auto(011, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto(012, "Essence", []));
-                CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Auto(012, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(30), new Auto(002, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(30), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(1), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(3), DateTime.Today.AddDays(2).AddHours(4).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto(008, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddHours(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(009, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(013, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(015, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(011, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(011, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(012, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Auto(015, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(2), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto(003, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(0), DateTime.Today.AddDays(1).AddHours(2).AddMinutes(0), new Auto(003, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Auto(013, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(015, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(30), new Auto(001, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(003, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(8).AddMinutes(0), new Auto(003, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Auto(006, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(007, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(008, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(009, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Auto(009, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(0), new Auto(010, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Auto(011, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Auto(012, "Essence", []));
+                await CreerReservation("MEM001", DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Auto(012, "Essence", []));
                 // Past Reservations
-                CreerReservation("MEM007", new DateTime(2025, 03, 11, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
-                CreerReservation("MEM007", new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Auto(002, "Essence", []));
-                CreerReservation("MEM007", new DateTime(2025, 03, 17, 10, 00, 0), new DateTime(2025, 03, 17, 11, 30, 0), new Auto(015, "Essence", []));
-                CreerReservation("MEM001", new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
-                CreerReservation("MEM005", new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM007", new DateTime(2025, 03, 11, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM007", new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Auto(002, "Essence", []));
+                await CreerReservation("MEM007", new DateTime(2025, 03, 17, 10, 00, 0), new DateTime(2025, 03, 17, 11, 30, 0), new Auto(015, "Essence", []));
+                await CreerReservation("MEM001", new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
+                await CreerReservation("MEM005", new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
             }
             Console.WriteLine("SeedDataAsync() completed!");
         }
@@ -568,16 +568,19 @@ namespace RentARideDB.Services
                 Console.WriteLine($"Error testing database connection: {ex.Message}");
             }
         }
-        public async void CreerVehicule(string type, int vehiculeID, int stationID, string categorie = null, List<string> carOptions = null)
+        public async Task CreerVehicule(string type, int stationID, string categorie = null, List<string> carOptions = null)
         {
             if (type == "Auto")
             {
+                // Create the vehicule
+                var vehicule = new Vehicule(type, stationID, categorie, carOptions);
+
                 // Create the auto
-                var vehicule = new Auto(stationID, categorie, carOptions);
+                //var vehicule1 = new Auto(stationID, categorie, carOptions);
                 // Insert the auto in the database
                 await CreateAsync(vehicule);
-                Console.WriteLine($"Inserted {vehicule.type} {vehicule.categorieAuto} with Id: {vehicule.vehiculeId}, at station : {vehicule.StationId}.");
-                if (carOptions != null && carOptions.Any())
+                Console.WriteLine($"Inserted {vehicule.type} {vehicule.categorieAuto} with Id: {vehicule.vehiculeId}, at station : {vehicule.vehiculeStationId}");
+                if (carOptions != null && carOptions.Count > 0)
                 {
                     foreach (var option in carOptions)
                     {
@@ -597,31 +600,27 @@ namespace RentARideDB.Services
                         }
                     }
                 }
+                else
+                Console.WriteLine($"with no options."); 
             }
-            else if (type == "Velo")
+            else
             {
-                var vehicule = new Velo(stationID);
+                var vehicule = new Vehicule(type, stationID);
                 await CreateAsync(vehicule);
-                Console.WriteLine($"Inserted {vehicule.type} with Id: {vehicule.vehiculeId}");
-            }
-            else if (type == "Moto")
-            {
-                var vehicule = new Moto(stationID);
-                await CreateAsync(vehicule);
-                Console.WriteLine($"Inserted {vehicule.type} with Id: {vehicule.vehiculeId}, at station : {vehicule.StationId}");
+                Console.WriteLine($"Inserted {vehicule.type} with Id: {vehicule.vehiculeId} at station {vehicule.vehiculeStationId}");
             }
         }
-        public async void creerMembre(string name, string password, string email)
+        public async Task creerMembre(string name, string password, string email)
         {
             await CreateAsync(new Membre(name, password, email));
         }
-        public async void CreerStation(string address, int spaces, int bikeSpaces)
+        public async Task CreerStation(string address, int spaces, int bikeSpaces)
         {
             var station = new Station(address, spaces, bikeSpaces);
             await CreateAsync(station);
             Console.WriteLine($"Inserted station with Id: {station.StationId} with address : {station.StationAddress}");
         }
-        public async void CreerReservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
+        public async Task CreerReservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
         {
             var reservation = new Reservation(memberid, requestedStartTime, requestedEndTime, vehicule);
             await CreateAsync(reservation);

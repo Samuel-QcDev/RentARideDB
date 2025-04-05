@@ -19,7 +19,7 @@ namespace RentARideDB.Models
         public int vehiculeStationId {  get; set; }
         [Ignore] // Prevent SQLite from mapping this property as a column
         public Station Station { get; set; } // Navigation property to Station (used for querying)
-        public int StationId { get; set; } // Foreign Key column
+        //public int StationId { get; set; } // Foreign Key column
         public string type {  get; set; }
         public string categorieAuto { get; set; }
         [Ignore]  // Ignore this property for SQLite storage
@@ -27,9 +27,20 @@ namespace RentARideDB.Models
         //public List<string> CarOptions { get; set; }
         public Vehicule()
         {
-            //AutoOptions = new List<AutoOption>();
-            //CarOptions = new List<string>();
-        }
 
+        }
+        public Vehicule(string type, int stationID)
+        {
+            this.type = type;
+            this.vehiculeStationId = stationID;
+        }
+        public Vehicule(string type, int stationID, string categorie, List<string> carOptions)
+        {
+            this.AutoOptions = new List<AutoOption>();
+            this.type = type;
+            this.vehiculeStationId = stationID;
+            this.categorieAuto = categorie;
+            //this.CarOptions = carOptions;
+        }
     }
 }

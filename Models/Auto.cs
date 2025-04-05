@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using SQLite;
 
 namespace RentARideDB.Models
