@@ -24,9 +24,12 @@ namespace RentARideDB.Models
         public string categorieAuto { get; set; }
         [Ignore]  // Ignore this property for SQLite storage
         public List<AutoOption> AutoOptions { get; set; }
+        //public List<string> CarOptions { get; set; }
         public Vehicule()
         {
-
+            //AutoOptions = new List<AutoOption>();
+            //CarOptions = new List<string>();
         }
+
     }
 }

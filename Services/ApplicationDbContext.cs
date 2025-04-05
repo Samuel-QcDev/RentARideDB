@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RentARideDB.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 
 namespace RentARideDB.Services
@@ -34,6 +35,7 @@ namespace RentARideDB.Services
         public ApplicationDbContext()
         {
             // Initialize the database connection here
+            //DeleteDatabase();
             _dbConnection = new SQLiteAsyncConnection(databasePath, Flags);
             Console.WriteLine($"Database path: {databasePath}");
         }
@@ -44,10 +46,20 @@ namespace RentARideDB.Services
         }
         public async Task InitAsync()
         {
-            if (_dbConnection == null) return;
+            if (_instance == null) return;
 
-            await CreateTablesAsync();  // Create tables asynchronously
-            await SeedDataAsync();      // Optionally seed data if required
+            Console.WriteLine("Starting Initialization...");
+            TestDatabaseConnection();
+            if (await IsDatabaseConnectedAsync())
+            {
+                await CreateTablesAsync();
+                await SeedDataAsync();
+            }
+            else
+            {
+                Console.WriteLine("Database connection failed.");
+            }
+            Console.WriteLine("Initialization Complete.");
         }
         // Static method to access the single instance
         public static ApplicationDbContext Instance
@@ -63,18 +75,88 @@ namespace RentARideDB.Services
         }
         private async Task CreateTablesAsync()
         {
-            await _dbConnection.CreateTableAsync<Vehicule>(); // Create the Vehicule table
-            await _dbConnection.CreateTableAsync<Auto>(); // Create the Auto table
-            await _dbConnection.CreateTableAsync<Moto>(); // Create the Moto table
-            await _dbConnection.CreateTableAsync<Velo>(); // Create the Velo table
-            await _dbConnection.CreateTableAsync<Station>();
-            await _dbConnection.CreateTableAsync<Login>();
-            await _dbConnection.CreateTableAsync<AutoOption>();
-            await _dbConnection.CreateTableAsync<Reservation>();
-            await _dbConnection.CreateTableAsync<ReservationResult>();
-            await _dbConnection.CreateTableAsync<Membre>();
-            await _dbConnection.CreateTableAsync<ReservationSearch>();
+            Console.WriteLine("Starting table creation...");
+
+            var tableNames = new List<string>
+    {
+        "Vehicule",
+        "Auto",
+        "Moto",
+        "Velo",
+        "Station",
+        "Login",
+        "AutoOption",
+        "Reservation",
+        "ReservationResult",
+        "Membre",
+        "ReservationSearch"
+    };
+
+            foreach (var tableName in tableNames)
+            {
+                try
+                {
+                    Console.WriteLine($"Checking if {tableName} exists...");
+                    if (!await TableExistsAsync(tableName))
+                    {
+                        Console.WriteLine($"Table {tableName} does not exist. Creating the table...");
+                        switch (tableName)
+                        {
+                            case "Auto":
+                                await _dbConnection.CreateTableAsync<Auto>();
+                                Console.WriteLine("Auto table created.");
+                                break;
+                            case "Moto":
+                                await _dbConnection.CreateTableAsync<Moto>();
+                                Console.WriteLine("Moto table created.");
+                                break;
+                            case "Velo":
+                                await _dbConnection.CreateTableAsync<Velo>();
+                                Console.WriteLine("Velo table created.");
+                                break;
+                            case "Station":
+                                await _dbConnection.CreateTableAsync<Station>();
+                                Console.WriteLine("Station table created.");
+                                break;
+                            case "AutoOption":
+                                await _dbConnection.CreateTableAsync<AutoOption>();
+                                Console.WriteLine("AutoOption table created.");
+                                break;
+                            case "Reservation":
+                                await _dbConnection.CreateTableAsync<Reservation>();
+                                Console.WriteLine("Reservation table created.");
+                                break;
+                            case "Membre":
+                                await _dbConnection.CreateTableAsync<Membre>();
+                                Console.WriteLine("Membre table created.");
+                                break;
+                            case "ReservationResult":
+                                await _dbConnection.CreateTableAsync<ReservationResult>();
+                                Console.WriteLine("ReservationResult table created.");
+                                break;
+                            case "ReservationSearch":
+                                await _dbConnection.CreateTableAsync<ReservationSearch>();
+                                Console.WriteLine("ReservationSearch table created.");
+                                break;
+                            default:
+                                Console.WriteLine($"No logic to create table {tableName}");
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Table {tableName} already exists.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error creating table {tableName}: {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("Table creation process completed.");
         }
+
         // Method to clear all data from the tables
         public async Task ClearAllTablesAsync()
         {
@@ -95,9 +177,17 @@ namespace RentARideDB.Services
         }
         public async Task<bool> TableExistsAsync(string tableName)
         {
-            var query = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
-            var result = await _dbConnection.ExecuteAsync(query);
-            return result > 0;
+            try
+            {
+                var query = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
+                var result = await _dbConnection.ExecuteAsync(query);
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking if table {tableName} exists: {ex.Message}");
+                return false;
+            }
         }
         public async Task ListAllTablesAsync()
         {
@@ -184,10 +274,16 @@ namespace RentARideDB.Services
             // Create table for the provided type if valid
             await _dbConnection.CreateTableAsync(entityType);
         }
-        public async Task<int> CreateAsync<TEntity>(TEntity entity) where TEntity : class
+        public async Task CreateAsync<TEntity>(TEntity entity) where TEntity : class
         {
-            return await _dbConnection.InsertAsync(entity);
-
+            try
+            {
+                await _dbConnection.InsertAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting object: {ex.Message}");
+            }
         }
         public async Task<int> AddorUpdateAsync<TEntity>(TEntity entity) where TEntity : class
         {
@@ -249,6 +345,7 @@ namespace RentARideDB.Services
         }
         private async Task SeedDataAsync()
         {
+            Console.WriteLine("SeedDataAsync() starting...");
             var autoCount = await _dbConnection.Table<Auto>().CountAsync();
             if (autoCount == 0)
             {
@@ -442,6 +539,34 @@ namespace RentARideDB.Services
                 CreerReservation("MEM001", new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
                 CreerReservation("MEM005", new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Auto(001, "Essence", []));
             }
+            Console.WriteLine("SeedDataAsync() completed!");
+        }
+        public async Task<bool> IsDatabaseConnectedAsync()
+        {
+            try
+            {
+                // Test the connection with a simple query
+                var result = await _dbConnection.ExecuteScalarAsync<int>("SELECT 1");
+                return result == 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database connection error: {ex.Message}");
+                return false;
+            }
+        }
+        public async Task TestDatabaseConnection()
+        {
+            try
+            {
+                Console.WriteLine("Testing database connection...");
+                var result = await _dbConnection.ExecuteScalarAsync<int>("SELECT 1");
+                Console.WriteLine($"Database test successful. Result: {result}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error testing database connection: {ex.Message}");
+            }
         }
         public async void CreerVehicule(string type, int vehiculeID, int stationID, string categorie = null, List<string> carOptions = null)
         {
@@ -451,30 +576,39 @@ namespace RentARideDB.Services
                 var vehicule = new Auto(stationID, categorie, carOptions);
                 // Insert the auto in the database
                 await CreateAsync(vehicule);
-                Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
-                // Insert AutoOptions into the AutoOption table
-                foreach (var option in carOptions)
+                Console.WriteLine($"Inserted {vehicule.type} {vehicule.categorieAuto} with Id: {vehicule.vehiculeId}, at station : {vehicule.StationId}.");
+                if (carOptions != null && carOptions.Any())
                 {
-                    var autoOption = new AutoOption
+                    foreach (var option in carOptions)
                     {
-                        Option = option,
-                        AutoId = vehicule.vehiculeId  // Foreign key reference to the Auto
-                    };
-                    await CreateAsync(autoOption);
+                        var autoOption = new AutoOption
+                        {
+                            Option = option,
+                            AutoId = vehicule.vehiculeId  // Foreign key reference to the Auto
+                        };
+                        try
+                        {
+                            Console.WriteLine($"Inserted the option {autoOption.Id}: {autoOption.Option} for the auto with ID : {autoOption.AutoId}");
+                            await CreateAsync(autoOption);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error inserting {vehicule.type}: {ex.Message}");
+                        }
+                    }
                 }
             }
             else if (type == "Velo")
             {
                 var vehicule = new Velo(stationID);
                 await CreateAsync(vehicule);
-                Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
+                Console.WriteLine($"Inserted {vehicule.type} with Id: {vehicule.vehiculeId}");
             }
             else if (type == "Moto")
             {
                 var vehicule = new Moto(stationID);
                 await CreateAsync(vehicule);
-                Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
-
+                Console.WriteLine($"Inserted {vehicule.type} with Id: {vehicule.vehiculeId}, at station : {vehicule.StationId}");
             }
         }
         public async void creerMembre(string name, string password, string email)
@@ -483,11 +617,27 @@ namespace RentARideDB.Services
         }
         public async void CreerStation(string address, int spaces, int bikeSpaces)
         {
-            await CreateAsync(new Station(address, spaces, bikeSpaces));
+            var station = new Station(address, spaces, bikeSpaces);
+            await CreateAsync(station);
+            Console.WriteLine($"Inserted station with Id: {station.StationId} with address : {station.StationAddress}");
         }
         public async void CreerReservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
         {
-            await CreateAsync(new Reservation(memberid, requestedStartTime, requestedEndTime, vehicule));
+            var reservation = new Reservation(memberid, requestedStartTime, requestedEndTime, vehicule);
+            await CreateAsync(reservation);
+            // Format the AutoOptions list to show their details
+            // Check if AutoOptions is not null and contains items
+            if (vehicule.AutoOptions != null && vehicule.AutoOptions.Any())
+            {
+                // Format the AutoOptions list to show their details
+                string optionsString = string.Join(", ", vehicule.AutoOptions.Select(option => option.ToString()));
+
+                Console.WriteLine($"Inserted reservation with Id: {reservation.ReservationID}, Start: {reservation.StartTime}, End: {reservation.EndTime}, at station {reservation.StationId} for a {vehicule.type}, {vehicule.categorieAuto}, with options: {vehicule.AutoOptions}");
+            }
+            else
+            {
+                Console.WriteLine($"Inserted reservation with Id: {reservation.ReservationID}, Start: {reservation.StartTime}, End: {reservation.EndTime}, at station {reservation.StationId} for a {vehicule.type}, {vehicule.categorieAuto}, with no options.");
+            }
         }
     }
 }
