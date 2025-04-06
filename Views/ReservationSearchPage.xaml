@@ -14,8 +14,11 @@
 
     <ContentPage.Resources>
         <ResourceDictionary 
-                    xmlns:local="clr-namespace:RentARideDB.Models">
+                    xmlns:local="clr-namespace:RentARideDB.Models"
+                    xmlns:tools="clr-namespace:RentARideDB.Tools">
             <local:RadioButtonValueConverter x:Key="RadioButtonValueConverter"/>
+            <tools:CarOptionsToStringConverter x:Key="CarOptionsToStringConverter"/>
+            
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -319,11 +322,29 @@
                     <DataTemplate x:DataType="model:Vehicule">
                         <Frame BorderColor="DarkGreen" Padding="10" Margin="10">
                             <VerticalStackLayout>
-                                <HorizontalStackLayout Padding="10"
-                                                       Spacing="10">
-                                    <Label Text="{Binding vehiculeId}"/>
-
+                                <HorizontalStackLayout Padding="1"
+                                                    Spacing="5">
+                                    <Label Text="{Binding type}" FontSize="Medium"/>
+                                    <Label Text="{Binding categorieAuto}" FontSize="Medium"/>
                                 </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="1"
+                                                       Spacing="1">
+                                    <Label Text="Vehicule ID : " FontSize="Medium"/>
+                                    <Label Text="{Binding vehiculeId}" FontSize="Medium"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="1"
+                                                       Spacing="1">
+                                    <Label Text="Station : " FontSize="Medium"/>
+                                    <Label Text="{Binding vehiculeStationId}" FontSize="Medium"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout 
+                                    Padding="1"
+                                    Spacing="5"
+                                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReservationSearchViewModel}}, Path=IsAutoSelected}">
+                                    <Label Text="Options : " FontSize="Medium"/>
+                                    <Label Text="{Binding CarOptionsString}" FontSize="Small"/>
+                                </HorizontalStackLayout>
+
                                 <Button Text="Reserve" 
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReservationSearchViewModel}}, Path=ReserveCommand}" 
                                             CommandParameter="{Binding .}" />
