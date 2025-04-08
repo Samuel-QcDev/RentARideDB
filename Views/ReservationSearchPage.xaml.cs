@@ -35,7 +35,6 @@ public partial class ReservationSearchPage : ContentPage
         _dbContext = ApplicationDbContext.Instance;
         ReservationSearchViewModel vm = new ReservationSearchViewModel(_dbContext);
         BindingContext = vm;
-            
         }
 
     // This method is called when the page is about to appear

@@ -13,7 +13,6 @@ public partial class MembreDetails : ContentPage
     {
         this.BindingContext = vm;
         InitializeComponent();
-        
 	}
 
     public MembreDetails(int id, string name, string level)

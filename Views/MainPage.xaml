@@ -11,6 +11,11 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Logout" 
+            Command="{Binding LogoutCommand}"/>
+    </ContentPage.ToolbarItems>
 
     <ScrollView>
         <VerticalStackLayout Padding="10" Spacing="50">

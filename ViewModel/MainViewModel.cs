@@ -51,5 +51,12 @@ public partial class MainViewModel : LocalBaseViewModel
 
             await Shell.Current.GoToAsync("Historiquereservationpage");
         }
+    [RelayCommand]
+    private async Task Logout()
+    {
+        var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
+        _dbContext.LogoutAsync(ActiveMemberID.Value);
+        await Shell.Current.GoToAsync("Loginpage");
+    }
 }
 

@@ -26,7 +26,7 @@ namespace RentARideDB.Models
         {
             
         }
-        public Reservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, string typeVehicule, int stationID, int vehiculeId)
+        public Reservation(int memberid, DateTime requestedStartTime, DateTime requestedEndTime, string typeVehicule, int stationID, int vehiculeId)
         {
             this.MemberID = memberid;
             this.StartTime = Utils.RoundToNearest30Minutes(requestedStartTime);
@@ -35,7 +35,7 @@ namespace RentARideDB.Models
             this.StationId = stationID;
             this.VehiculeID = vehiculeId;
         }
-        public Reservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
+        public Reservation(int memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
         {
             this.MemberID = memberid;
             this.StartTime = Utils.RoundToNearest30Minutes(requestedStartTime);

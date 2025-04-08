@@ -28,7 +28,7 @@ namespace RentARideDB.Models
         [ObservableProperty]
         private int vehiculeID; // Foreign key to Vehicule
         [ObservableProperty]
-        private string memberID;
+        private int memberID;
         //[ObservableProperty]
         //public string autoOptionsString;
         //public bool IsChecked { get; set; }

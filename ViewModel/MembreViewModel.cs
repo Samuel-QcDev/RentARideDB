@@ -76,4 +76,9 @@ public partial class MembreViewModel : LocalBaseViewModel
         await Shell.Current.GoToAsync($"Loginpage?memberEmail={memberEmail}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
         //await Shell.Current.GoToAsync($"Loginpage, navigationParameter");
     }
+    [RelayCommand]
+    private async Task BackToLogin()
+    {
+        await Shell.Current.GoToAsync("Loginpage");
+    }
 }

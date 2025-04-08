@@ -71,13 +71,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public Station StationDetails { get; set; }
     public Reservation ReservationDetails {  get; set; }
     public Membre MembreDetails { get; set; }
+    public Login LoginDetails { get; set; }
     public ReservationResult ResultDetails { get; set; }
-    public int DateChangedFlag { get; set; } = 0;
-
-
-
-    //public ReservationService ReservationService => ReservationService.Instance;
-
     public Vehicule VehiculeDetails { get; set; }
     public ICommand OnVehicleTypeChangedCommand { get; }
     public ICommand OnStationChangedCommand { get; }
@@ -188,6 +183,9 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         StationDetails = new Station();
         ReservationDetails = new Reservation();
         ResultDetails = new ReservationResult();
+        LoginDetails = new Login();
+        MembreDetails = new Membre();
+
 
         ReservationsResultPast = new ObservableCollection<Reservation>();
         ReservationsResultCurrent = new ObservableCollection<Reservation>();
@@ -267,9 +265,10 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         //myStations[index] = new Station(index, id, address, spaces, bikeSpaces);
         await _dbContext.CreateAsync(new Station(address, spaces, bikeSpaces));
     }
-    public async void CreerReservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
+    public async void CreerReservation(int memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
     {
-        await _dbContext.CreateAsync(new Reservation(memberid, requestedStartTime, requestedEndTime, vehicule));
+        var reservation = new Reservation(memberid, requestedStartTime, requestedEndTime, vehicule);
+        await _dbContext.CreateAsync(reservation);
     }
     //public void CreerReservation(string memberid, DateTime requestedStartTime, DateTime requestedEndTime, Vehicule vehicule)
     //{
@@ -328,8 +327,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         TimeSpan threshold6Hours = TimeSpan.FromHours(6);
         TimeSpan threshold30Mins = TimeSpan.FromMinutes(30);
         await Task.Yield();
-        if (DateChangedFlag != 1)
-            DateChangedFlag = 1;
+
         if (ReservationSearchDetails.RequestedEndTime < ReservationSearchDetails.RequestedStartTime)
         {
             string message = "The End Time cannot be BEFORE the Start Time! \n\n Please enter a valid time.";
@@ -367,45 +365,24 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         Console.WriteLine(StartDate);
         ReservationSearchDetails.RequestedStartTime = StartDate.Add(StartTime);
         await Task.Yield();
-        if (StartDate < DateTime.Now.Date)
-        {
-            string message = "You cannot enter a Date before Today! \n\n Please enter a valid Date.";
-            await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
-        }
+        //if (StartDate < DateTime.Now.Date)
+        //{
+        //    string message = "You cannot enter a Date before Today! \n\n Please enter a valid Date.";
+        //    await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
+        //}
     }
     private async void OnEndDateChanged()
     {
         Console.WriteLine(EndDate);
         ReservationSearchDetails.RequestedEndTime = EndDate.Add(EndTime);
         await Task.Yield();
-        if (DateChangedFlag != 1)
-            DateChangedFlag = 1;
-        if (EndDate < StartDate)
-        {
-            string message = "The End Date cannot be BEFORE the Start Date! \n\n Please enter a valid Date.";
-            await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
-        }
-    }
-    public async Task<List<string>> LoadAutoOptionsAsync(int vehiculeId)
-    {
-        var autoOptions = await _dbContext._dbConnection
-            .Table<AutoOption>()
-            .Where(option => option.AutoId == vehiculeId)
-            .ToListAsync();
-
-        // Return a list of options as strings
-        return autoOptions.Select(option => option.Option).ToList();
-    }
-    public async Task<string> ToStringAsync(Vehicule vehicule)
-    {
-        // Load AutoOptions from the database
-        var carOptions = await LoadAutoOptionsAsync(vehicule.vehiculeId);
-
-        // Check if we have any options
-        string carOptionsString = carOptions.Any() ? string.Join(", ", carOptions) : "No options";
-
-        // Return a string representation of the Vehicule including the options
-        return $"{vehicule.type} ID: {vehicule.vehiculeId} Station: {vehicule.vehiculeStationId} {vehicule.categorieAuto} {carOptionsString}";
+        //if (DateChangedFlag != 1)
+        //    DateChangedFlag = 1;
+        //if (EndDate < StartDate)
+        //{
+        //    string message = "The End Date cannot be BEFORE the Start Date! \n\n Please enter a valid Date.";
+        //    await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
+        //}
     }
 
     // Main method to filter vehicules based on criteria
@@ -435,8 +412,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
 
         // Filter by vehicle type
 
-            // Filter the list using LINQ if it's already in memory (List<Vehicle>)
-            selectedVehicles = AllVehicules.Where(v => v.type == ReservationSearchDetails.TypeVehicule).ToList();
+        // Filter the list using LINQ if it's already in memory (List<Vehicle>)
+        selectedVehicles = AllVehicules.Where(v => v.type == ReservationSearchDetails.TypeVehicule).ToList();
 
         // Iterate through vehicles and apply checks
         foreach (var vehicule in selectedVehicles)
@@ -463,53 +440,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             }
         }
     }
-    //private void AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
-    //{
-    //    Vehicules.Clear(); // Clear the Vehicules CollectionView
-    //    StationDetails.selectedStationID.Clear();
-    //    // Iterate over all stations to verify selected station(s)
-    //    for (int i = myStations.Length - 1; i >= 0; i--)
-    //    {
-    //        if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (ReservationSearchDetails.StationAddress == "All Stations"))
-    //        {
-    //            StationDetails.selectedStationID.Add(myStations[i].StationId);
-    //        }
-    //        else if ((myStations[i] != null) && (!Stations.Contains(myStations[i])) && (myStations[i].StationAddress == ReservationSearchDetails.StationAddress))
-    //        {
-    //            StationDetails.selectedStationID.Add(myStations[i].StationId);
-    //        }
-    //    }
 
-        //    // Iterate over all vehhicules to check if it meets the criteria set by user
-        //    for (int i = myVehicules.Length - 1; i >= 0; i--)
-        //    {
-        //        if (myVehicules[i] != null)
-        //        {
-        //            if (ReservationSearchDetails.TypeVehicule == "Auto")
-        //            {
-        //                IsAutoSelected = true;
-        //                if (myVehicules[i].type == "Auto")
-        //                {
-        //                    if (CheckCategorieAuto(myVehicules[i]))
-        //                    {
-        //                        if (CheckOptions(myVehicules[i], i, optionsChecked))
-        //                        {
-        //                            CheckStation(myVehicules[i]);
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                IsAutoSelected = false;
-        //                if (ReservationSearchDetails.TypeVehicule == myVehicules[i].type)
-        //                {
-        //                    CheckStation(myVehicules[i]);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     private async Task<bool> CheckCategorieAuto(Vehicule vehicule)
     {
         string selectedCategory = CategorieAuto;
@@ -540,18 +471,28 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     if (IsCheckedGPS) addOptions.Add("GPS");
     if (IsCheckedChildSeat) addOptions.Add("ChildSeat");
 
-    if (!string.IsNullOrEmpty(checkedOption))
+    if (vehicule ==  null)
+            return false;
+        if (_dbContext._dbConnection == null)
+        {
+            Console.WriteLine("Database connection is null.");
+            string message = "There is an issue with the database connection";
+            await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
+        }
+        if (!string.IsNullOrEmpty(checkedOption))
         {
             removalOptions.Add(checkedOption);
             IsOptions = false;
         }
-    else
+        else
         {
             IsOptions = true;
         }
 
-
-    // Fetch the AutoOptions from the database for the current vehicle (Auto)
+        // Fetch the AutoOptions from the database for the current vehicle (Auto)
+        //await _dbContext.TestDatabaseConnection();
+        //if (vehicule == null)
+        //    Console.WriteLine("Vehicule is null!");
     var autoOptions = await _dbContext._dbConnection
         .Table<AutoOption>()
         .Where(option => option.AutoId == vehicule.vehiculeId)  // Make sure the AutoOption belongs to this Auto
@@ -566,7 +507,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     bool allValuesInList = addOptions.All(item => vehicleOptions.Contains(item));
     bool anyValueInList = addOptions.Any(item => vehicleOptions.Contains(item));
     bool containsAnyValue = removalOptions.Any(item => vehicleOptions.Contains(item));
-
 
         // Convert the AutoOptions to a list of strings (this will be used for CarOptions)
         List<string> vehicleOpts = autoOptions.Select(option => option.Option).ToList();
@@ -597,47 +537,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
 
     return false;
 }
-    //private bool CheckOptions(Vehicule vehicule, int index, string checkedOption = "")
-    //{
-    //    ReservationSearchDetails.indexVehiculesToBeRemoved.Clear();
-
-    //    HashSet<string> addOptions = new HashSet<string> { };
-    //    HashSet<string> removalOptions = new HashSet<string> { };
-
-    //    if (IsCheckedMP3) addOptions.Add("MP3");
-    //    if (IsCheckedAC) addOptions.Add("AC");
-    //    if (IsCheckedGPS) addOptions.Add("GPS");
-    //    if (IsCheckedChildSeat) addOptions.Add("ChildSeat");
-
-    //    if (checkedOption != "")
-    //        removalOptions.Add(checkedOption);
-
-    //    bool allValuesInList = addOptions.All(item => vehicule.AutoOptions.Contains(item));
-    //    bool AnyValueInList = addOptions.Any(item => vehicule.AutoOptions.Contains(item));
-    //    bool containsAnyValue = removalOptions.Any(item => vehicule.AutoOptions.Contains(item));
-
-    //    //bool containsValueChecked = vehicule.AutoOptions.Contains(optionsChecked);
-    //    bool containsNoOption = vehicule.AutoOptions.Count == 0;
-
-    //    //If option was just unchecked, don't add cars with that option
-    //    if (containsAnyValue)
-    //        return false;
-
-    //    // If vehicule has no options and no option is checked, it is added
-    //    if (addOptions.Count == 0)
-    //    {
-    //        if (containsNoOption) return true;
-    //        return false;
-
-    //    }
-    //    // allValuesInList : each vehicule must have ALL checked options, or
-    //    // AnyValueInList : each vehicule must have ONE of the checked options
-    //    if (allValuesInList && !containsNoOption)
-    //    {
-    //        return true;
-    //    }
-    //    return false;
-    //    }
     private async void CheckStation(Vehicule vehicule)
     {
         // Check if vehicule (from myVehicules[i] above) is at a selected station & if it is available
@@ -662,13 +561,22 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     //{
     //    await Shell.Current.GoToAsync("Resultpage");
     //}
-    private void OnReservationAdded()
+    private async void OnReservationAdded()
     {
         ReservationsResultPast.Clear();
         ReservationsResultCurrent.Clear();
-        foreach (Reservation reservation in ReservationDetails.Reservations)
+        var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
+
+        List<Reservation> selectedReservation;
+        // Fetch vehicles from the database
+        var AllReservations = await _dbContext.GetReservationsAsync();
+
+        selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
+        
+        // Sort Reservations btw past and current reservations
+        foreach (Reservation reservation in AllReservations)
         {
-            if ((reservation != null) && (reservation.MemberID == "MEM007") && (!(_dbContext.ReservationsResultPast.Contains(reservation))|| !(_dbContext.ReservationsResultCurrent.Contains(reservation))))
+            if ((reservation != null) && (reservation.MemberID == ActiveMemberID.Value) && (!(_dbContext.ReservationsResultPast.Contains(reservation))|| !(_dbContext.ReservationsResultCurrent.Contains(reservation))))
             {
                 if (reservation.EndTime < DateTime.Now)
                 {
@@ -689,7 +597,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         //int indexRes = ReservationDetails.myReservations.Length-1;
         //string resID;
         // ID for Logged in member, will need to be changed to retrieve MemberID from MembreDetails
-        string currentMemberID = "MEM007";
+        //int currentMemberID = 007;
+        var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
 
         //if (indexRes < 100)
         //{
@@ -734,7 +643,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         }
         else
         {
-            CreerReservation(currentMemberID, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime,vehicule);
+            CreerReservation(ActiveMemberID.Value, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime,vehicule);
             OnReservationAdded();
             AddVehiculesBasedOnAllUserInputs();
             await Shell.Current.GoToAsync("Mainpage");
@@ -751,5 +660,12 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     {
 
         await Shell.Current.GoToAsync("Mainpage");
+    }
+    [RelayCommand]
+    private async Task Logout()
+    {
+        var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
+        _dbContext.LogoutAsync(ActiveMemberID.Value);
+        await Shell.Current.GoToAsync("Loginpage");
     }
 }

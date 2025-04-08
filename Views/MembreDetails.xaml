@@ -9,6 +9,9 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back to Login" Command="{Binding BackToLoginCommand}"/>
+    </ContentPage.ToolbarItems>
     <VerticalStackLayout
         Margin="0,30,0,0"
         Padding="10"

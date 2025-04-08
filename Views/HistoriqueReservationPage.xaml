@@ -12,7 +12,8 @@
 
     <!--  Toolbar with a button  -->
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding BackToMainPageCommand}" IconImageSource="home.png" />
+        <ToolbarItem IconImageSource="home.png" Command="{Binding BackToMainPageCommand}"/>
+        <ToolbarItem Text="Logout" Command="{Binding LogoutCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>

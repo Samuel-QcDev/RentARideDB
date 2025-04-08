@@ -31,7 +31,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<HistoriqueReservationPage>();
         builder.Services.AddSingleton<ReservationSearchPage>();
-        builder.Services.AddSingleton<ResultPage>();
         builder.Services.AddSingleton<MembreDetails>();
 
         // View Models
@@ -39,7 +38,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<MainViewModel>(); 
         builder.Services.AddSingleton<HistoriqueReservationViewModel>();
         builder.Services.AddSingleton<ReservationSearchViewModel>();
-        builder.Services.AddSingleton<ReservationResultViewModel>();
         builder.Services.AddSingleton<MembreViewModel>();
 
         return builder.Build();
