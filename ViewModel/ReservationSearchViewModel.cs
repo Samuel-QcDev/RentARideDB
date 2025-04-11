@@ -53,6 +53,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     private bool isOptions;
     [ObservableProperty]
     private string categorieAuto;
+    private bool isLoading = false;
 
     private ReservationSearch _reservationSearchDetails;
     public ReservationSearch ReservationSearchDetails
@@ -202,7 +203,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         ReservationSearchDetails.CategorieAuto = "Essence";
 
         AddVehiculesBasedOnAllUserInputs();   // Populate the CollectionView with vehicules according to initial conditions
-        OnReservationAdded(); // Add the reservations to the correct CollectionView to display on MainPage or HistoriquePage 
+/*        OnReservationAdded();*/ // Add the reservations to the correct CollectionView to display on MainPage or HistoriquePage 
                               //var vehicules = _dbContext.GetTableRows<Vehicule>("Vehicule");
                               //Console.WriteLine(MemberFirstName);
 
@@ -388,56 +389,74 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     // Main method to filter vehicules based on criteria
     private async Task AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
     {
+        Console.WriteLine("AddVehiculesBasedOnAllUserInputs() called");
+        if (isLoading)
+        {
+            Console.WriteLine("Skipping because method is already running.");
+            return;
+        }
         Vehicules.Clear(); // Clear the Vehicules CollectionView
-        StationDetails.selectedStationID.Clear(); // Clear selected stations
 
-        // Fetch stations from the database based on the user's selected station address
-        var stations = await _dbContext.GetStationsAsync();
+        isLoading = true;
 
-        if (ReservationSearchDetails.StationAddress != "All Stations")
+        try
         {
-            stations = stations.Where(station => station.StationAddress == ReservationSearchDetails.StationAddress).ToList();
-        }
+            Console.WriteLine("AddVehiculesBasedOnAllUserInputs() started");
+            // Fetch stations from the database based on the user's selected station address
 
-        var selectedStations = stations.ToList();
-
-        // Add the selected stations to the StationDetails list
-        foreach (var station in selectedStations)
-        {
-            StationDetails.selectedStationID.Add(station.StationId);
-        }
-        List<Vehicule> selectedVehicles;
-        // Fetch vehicles from the database
-        var AllVehicules = await _dbContext.GetVehiculesAsync();
-
-        // Filter by vehicle type
-
-        // Filter the list using LINQ if it's already in memory (List<Vehicle>)
-        selectedVehicles = AllVehicules.Where(v => v.type == ReservationSearchDetails.TypeVehicule).ToList();
-
-        // Iterate through vehicles and apply checks
-        foreach (var vehicule in selectedVehicles)
-        {
-            if (vehicule != null)
+            var stations = await _dbContext.GetStationsAsync();
+            if (ReservationSearchDetails.StationAddress != "All Stations")
             {
-                // If the selected vehicle type is "Auto"
-                if (ReservationSearchDetails.TypeVehicule == "Auto")
+                stations = stations.Where(station => station.StationAddress == ReservationSearchDetails.StationAddress).ToList();
+            }
+
+            var selectedStations = stations.ToList();
+            _dbContext.selectedStationID.Clear(); // Clear selected stations
+                                                  // Add the selected stations to the StationDetails list
+            foreach (var station in selectedStations)
+            {
+                _dbContext.selectedStationID.Add(station.StationId);
+            }
+            List<Vehicule> selectedVehicles;
+            // Fetch vehicles from the database
+            var AllVehicules = await _dbContext.GetVehiculesAsync();
+            Console.WriteLine($"Number of vehicules in AllVehicules {AllVehicules.Count}");
+
+            // Filter by vehicle type
+
+            // Filter the list using LINQ if it's already in memory (List<Vehicle>)
+            selectedVehicles = AllVehicules.Where(v => v.type == ReservationSearchDetails.TypeVehicule).ToList();
+            Console.WriteLine($"Number of vehicules in SelectedVehicules {selectedVehicles.Count}");
+
+            // Iterate through vehicles and apply checks
+            foreach (var vehicule in selectedVehicles)
+            {
+                Console.WriteLine($"Processing vehicule ID: {vehicule?.vehiculeId}");
+                if (vehicule != null)
                 {
-                    string selectedCategory = CategorieAuto;
-                    IsAutoSelected = true;
-                    // Check if the vehicle is of type "Auto" and matches the category and options
-                    if (vehicule.categorieAuto == selectedCategory && await CheckOptions(vehicule, optionsChecked))
+                    // If the selected vehicle type is "Auto"
+                    if (ReservationSearchDetails.TypeVehicule == "Auto")
                     {
-                        CheckStation(vehicule);
+                        string selectedCategory = CategorieAuto;
+                        // Check if the vehicle is of type "Auto" and matches the category and options
+                        if (vehicule.categorieAuto == selectedCategory && await CheckOptions(vehicule, optionsChecked))
+                        //if (vehicule.categorieAuto == selectedCategory)
+                        {
+                            await CheckStation(vehicule);
+                        }
+                    }
+                    else
+                    {
+                        // If the selected type is not "Auto", simply check the station
+                        await CheckStation(vehicule);
                     }
                 }
-                else
-                {
-                    // If the selected type is not "Auto", simply match based on the type
-                    IsAutoSelected = false;
-                    CheckStation(vehicule);
-                }
             }
+        }
+        finally
+        {
+            isLoading = false;
+            Console.WriteLine("AddVehiculesBasedOnAllUserInputs() finished");
         }
     }
 
@@ -537,17 +556,21 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
 
     return false;
 }
-    private async void CheckStation(Vehicule vehicule)
+    private async Task CheckStation(Vehicule vehicule)
     {
         // Check if vehicule (from myVehicules[i] above) is at a selected station & if it is available
-        foreach (int station in StationDetails.selectedStationID)
+        foreach (int station in _dbContext.selectedStationID)
         {
+            Console.WriteLine($"CheckStation on vehicule with ID {vehicule?.vehiculeId} at {vehicule?.vehiculeStationId} and station with ID {station}");
             if (vehicule.vehiculeStationId == station)
             {
                 //if (IsCarAvailable(ReservationDetails.Reservations, vehicule.vehiculeId, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime))
                 //{
                     // Add the vehicule directly to the CollectionView
                     Vehicules.Add(vehicule);
+                    Console.WriteLine($"vehicule with ID {vehicule?.vehiculeId} has been added to Vehicules");
+                    Console.WriteLine($"Number of vehicules : {Vehicules.Count}");
+                    return;
                 //await _dbContext.CreateAsync(vehicule);
                 //ReservationSearchDetails.indexVehiculesToBeAdded.Add(i);
                 //}
@@ -592,24 +615,15 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     private async void Reserve(Vehicule vehicule)
     {
         Console.WriteLine("Reserve called for vehicule: " + vehicule.vehiculeId);
-        Console.WriteLine("# of items in ReservationResults collection: " );
-        Console.WriteLine("# of items in Reservations collection: " + ReservationDetails.Reservations.Count);
+        var Count = _dbContext._dbConnection.Table<Reservation>().CountAsync();
+        Console.WriteLine("# of items in Reservations" + Count);
         //int indexRes = ReservationDetails.myReservations.Length-1;
         //string resID;
         // ID for Logged in member, will need to be changed to retrieve MemberID from MembreDetails
         //int currentMemberID = 007;
         var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
+        Console.WriteLine("ActiveMemberID is " + ActiveMemberID);
 
-        //if (indexRes < 100)
-        //{
-        //    resID = "RES00" + (indexRes).ToString();
-        //}
-        //else
-        //{
-        //    resID = "RES0" + (indexRes).ToString();
-        //}
-        //_reservationService.AddReservation(new Reservation(resID, currentMemberID, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime, vehicule));
-        //ReservationSearchDetails.RequestedEndTime = EndDate.Add(EndTime);
         TimeSpan interval = ReservationSearchDetails.RequestedEndTime - ReservationSearchDetails.RequestedStartTime;
         TimeSpan threshold6Hours = TimeSpan.FromHours(6);
         TimeSpan threshold30Mins = TimeSpan.FromMinutes(30);

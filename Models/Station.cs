@@ -21,8 +21,8 @@ namespace RentARideDB.Models
         [ObservableProperty] private int freeBikeSpaces;
         [ObservableProperty] private int occupiedbikeSpaces;
         private int index;
-        [Ignore]
-        public List<int> selectedStationID { get; set; } = new();
+        //[Ignore]
+        //public List<int> selectedStationID { get; set; } = new();
 
         public Station()
         {
@@ -32,7 +32,7 @@ namespace RentARideDB.Models
         {
             this.stationAddress = address;
             this.parkSpaces = spaces;
-            this.index = index;
+            //this.index = index;
             this.bikeSpaces = bikeSpaces;
         }
         //public Station StationDetails { get; set; }

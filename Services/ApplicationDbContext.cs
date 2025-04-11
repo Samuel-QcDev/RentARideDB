@@ -31,7 +31,8 @@ namespace RentARideDB.Services
         private static ApplicationDbContext _instance;
         public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
         public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
-   
+        public List<int> selectedStationID { get; set; } = new();
+
         public ApplicationDbContext()
         {
             // Initialize the database connection here
