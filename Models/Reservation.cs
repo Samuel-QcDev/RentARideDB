@@ -43,6 +43,8 @@ namespace RentARideDB.Models
             this.TypeVehicule = vehicule.type;
             this.StationId = vehicule.vehiculeStationId;
             this.VehiculeID = vehicule.vehiculeId; // Set the VehiculeID from the vehicule object (handle null case)
+            this.CategorieAuto = vehicule.categorieAuto ?? "N/A";
+            //this.AutoOptions = vehicule.AutoOptions ?? new List<AutoOption>();
         }
 
         //public Reservation[] myReservations = new Reservation[100];

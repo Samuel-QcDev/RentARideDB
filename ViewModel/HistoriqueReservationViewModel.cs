@@ -21,7 +21,6 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
     [RelayCommand]
     private async Task BackToMainPage()
     {
-
         await Shell.Current.GoToAsync("Mainpage");
     }
     [RelayCommand]

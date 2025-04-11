@@ -75,19 +75,19 @@
                     <DataTemplate x:DataType="Model:Reservation">
                         <Frame Margin="10" Padding="8" BorderColor="DarkGreen">
                             <HorizontalStackLayout Padding="0" Spacing="2">
-
                                 <VerticalStackLayout Padding="0" Spacing="2">
-                                    <Label FontSize="Small" Text="{Binding TypeVehicule}"/>
+                                    <Label Text="test"/>
+                                    <!--<Label FontSize="Small" Text="{Binding TypeVehicule}"/>
                                     <Label FontSize="Small" Text="Station : "/>
                                     <Label FontSize="Small" Text="Start : "/>
-                                    <Label FontSize="Small" Text="End : "/>
+                                    <Label FontSize="Small" Text="End : "/>-->
                                 </VerticalStackLayout>
 
                                 <VerticalStackLayout Padding="0" Spacing="2">
-                                    <Label FontSize="Small" Text="{Binding VehiculeID}" />
+                                    <!--<Label FontSize="Small" Text="{Binding VehiculeID}" />
                                     <Label FontSize="Small" Text="{Binding StationId}" />
                                     <Label FontSize="Small" Text="{Binding StartTime}" />
-                                    <Label FontSize="Small" Text="{Binding EndTime}" />
+                                    <Label FontSize="Small" Text="{Binding EndTime}" />-->
                                 </VerticalStackLayout>
 
                                 <!--<VerticalStackLayout Padding="0" Spacing="2">

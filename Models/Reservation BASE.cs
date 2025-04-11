@@ -21,6 +21,8 @@ namespace RentARideDB.Models
         private string typeVehicule;
         [ObservableProperty]
         private string categorieAuto;
+        [Ignore]
+        private List<AutoOption> AutoOptions { get; set; }
         [ObservableProperty]
         private int stationId;
         [ObservableProperty]
@@ -36,6 +38,11 @@ namespace RentARideDB.Models
         //public List<string> autoOptions;
         [Ignore]
         public ObservableCollection<Reservation> Reservations { get; } = new();
+        //[Ignore]
+        //public ObservableCollection<Reservation> ReservationsResultPast { get; set; } = new();
+        //[Ignore]
+        //public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; } = new();
+
         //[ObservableProperty]
         //public List<Vehicule> searchResults = new();
         public Reservation_BASE()

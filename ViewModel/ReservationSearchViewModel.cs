@@ -84,8 +84,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public IRelayCommand<Vehicule> ReserveCommand { get; }
     public IRelayCommand<Reservation> CancelCommand { get; }
     private TimeSpan _startTime;
-    public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
-    public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
+    //public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
+    //public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
     public ObservableCollection<Vehicule> Vehicules { get; } = new();
     public ObservableCollection<Station> Stations { get; } = new();
 
@@ -146,10 +146,11 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             }
         }
     }
-    public bool IsCarAvailable(ObservableCollection<Reservation> reservations, int vehiculeID, DateTime newStartTime, DateTime newEndTime)
+    public async Task<bool> IsCarAvailable(ObservableCollection<Reservation> reservations, int vehiculeID, DateTime newStartTime, DateTime newEndTime)
     {
+        var AllReservations = await _dbContext.GetReservationsAsync();
         // Check for overlap with existing reservations for the same car
-        foreach (var reservation in reservations)
+        foreach (Reservation reservation in AllReservations)
         {
             if (reservation.VehiculeID == vehiculeID)
             {
@@ -188,8 +189,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         MembreDetails = new Membre();
 
 
-        ReservationsResultPast = new ObservableCollection<Reservation>();
-        ReservationsResultCurrent = new ObservableCollection<Reservation>();
+        //ReservationsResultPast = new ObservableCollection<Reservation>();
+        //ReservationsResultCurrent = new ObservableCollection<Reservation>();
 
         // Initialize some options
         StartDate = DateTime.Now.Date;
@@ -202,7 +203,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         ReservationSearchDetails.StationAddress = "All Stations";
         ReservationSearchDetails.CategorieAuto = "Essence";
 
-        AddVehiculesBasedOnAllUserInputs();   // Populate the CollectionView with vehicules according to initial conditions
+        InitRes();
+       /* AddVehiculesBasedOnAllUserInputs(); */  // Populate the CollectionView with vehicules according to initial conditions
 /*        OnReservationAdded();*/ // Add the reservations to the correct CollectionView to display on MainPage or HistoriquePage 
                               //var vehicules = _dbContext.GetTableRows<Vehicule>("Vehicule");
                               //Console.WriteLine(MemberFirstName);
@@ -217,6 +219,11 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         //}
 
         //DateChangedFlag = 0;
+    }
+    public async Task InitRes()
+    {
+        await AddVehiculesBasedOnAllUserInputs();   // Populate the CollectionView with vehicules according to initial conditions
+        //await OnReservationAdded();
     }
 
     public async void CreerVehicule(string type, string vehiculeID, int stationID, string categorie = null, List<string> carOptions = null)
@@ -250,9 +257,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             var vehicule = new Moto(stationID);
             await _dbContext.CreateAsync(vehicule);
             Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
-
         }
-        //Vehicules.Add(myVehicules[index]);
     }
     public async void creerMembre(string name, string password, string email)
     {
@@ -564,16 +569,14 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             Console.WriteLine($"CheckStation on vehicule with ID {vehicule?.vehiculeId} at {vehicule?.vehiculeStationId} and station with ID {station}");
             if (vehicule.vehiculeStationId == station)
             {
-                //if (IsCarAvailable(ReservationDetails.Reservations, vehicule.vehiculeId, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime))
-                //{
+                if (await IsCarAvailable(ReservationDetails.Reservations, vehicule.vehiculeId, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime))
+                {
                     // Add the vehicule directly to the CollectionView
                     Vehicules.Add(vehicule);
                     Console.WriteLine($"vehicule with ID {vehicule?.vehiculeId} has been added to Vehicules");
                     Console.WriteLine($"Number of vehicules : {Vehicules.Count}");
                     return;
-                //await _dbContext.CreateAsync(vehicule);
-                //ReservationSearchDetails.indexVehiculesToBeAdded.Add(i);
-                //}
+                }
             }
         }
     }
@@ -586,28 +589,31 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     //}
     private async void OnReservationAdded()
     {
-        ReservationsResultPast.Clear();
-        ReservationsResultCurrent.Clear();
+        _dbContext.ReservationsResultPast.Clear();
+        _dbContext.ReservationsResultCurrent.Clear();
         var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
 
-        List<Reservation> selectedReservation;
+        //List<Reservation> selectedReservation;
         // Fetch vehicles from the database
         var AllReservations = await _dbContext.GetReservationsAsync();
 
-        selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
-        
+        //selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
+
         // Sort Reservations btw past and current reservations
         foreach (Reservation reservation in AllReservations)
         {
-            if ((reservation != null) && (reservation.MemberID == ActiveMemberID.Value) && (!(_dbContext.ReservationsResultPast.Contains(reservation))|| !(_dbContext.ReservationsResultCurrent.Contains(reservation))))
+            if (reservation != null)
             {
-                if (reservation.EndTime < DateTime.Now)
+                if ( (reservation.MemberID == ActiveMemberID.Value) && !(_dbContext.ReservationsResultPast.Contains(reservation)) || !(_dbContext.ReservationsResultCurrent.Contains(reservation)) )
                 {
-                    _dbContext.ReservationsResultPast.Add(reservation);
-                }
-                else
-                {
-                    _dbContext.ReservationsResultCurrent.Add(reservation);
+                    if (reservation.EndTime < DateTime.Now)
+                    {
+                        _dbContext.ReservationsResultPast.Add(reservation);
+                    }
+                    else
+                    {
+                        _dbContext.ReservationsResultCurrent.Add(reservation);
+                    }
                 }
             }
         }
@@ -616,11 +622,13 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     {
         Console.WriteLine("Reserve called for vehicule: " + vehicule.vehiculeId);
         var Count = _dbContext._dbConnection.Table<Reservation>().CountAsync();
-        Console.WriteLine("# of items in Reservations" + Count);
-        //int indexRes = ReservationDetails.myReservations.Length-1;
-        //string resID;
+        Console.WriteLine("Vehicule debug:");
+        Console.WriteLine($"ID: {vehicule?.vehiculeId}");
+        Console.WriteLine($"Station ID: {vehicule?.vehiculeStationId}");
+        Console.WriteLine($"Type: {vehicule?.type}");
+        Console.WriteLine($"Categorie Auto: {vehicule?.categorieAuto}");
+        Console.WriteLine($"AutoOptions: {(vehicule?.AutoOptions != null ? string.Join(", ", vehicule.AutoOptions) : "null")}");
         // ID for Logged in member, will need to be changed to retrieve MemberID from MembreDetails
-        //int currentMemberID = 007;
         var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
         Console.WriteLine("ActiveMemberID is " + ActiveMemberID);
 
