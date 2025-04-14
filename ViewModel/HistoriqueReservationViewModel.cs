@@ -16,7 +16,7 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
     {
         _dbContext = ApplicationDbContext.Instance;
     }
-    public async Task LoadReservations()
+        public async Task LoadReservations()
     {
         await _dbContext.OnReservationAdded();
     }

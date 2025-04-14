@@ -31,6 +31,7 @@ public partial class MainViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberEmail;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
+    [ObservableProperty] private string welcomeMessage;
 
     public MainViewModel(ApplicationDbContext dbContext)
     {
@@ -56,8 +57,13 @@ public partial class MainViewModel : LocalBaseViewModel
     //{
     //    ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
     //}
+    public async Task LoadWelcomeMessageAsync()
+    {
+        WelcomeMessage = await _dbContext.GetWelcomeMessageAsync(); // from ApplicationDbContext
+    }
     public async Task LoadReservations()
     {
+        await LoadWelcomeMessageAsync();
         await _dbContext.OnReservationAdded();
     }
     [RelayCommand]

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using RentARideDB.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 
 namespace RentARideDB.Services
@@ -428,6 +429,19 @@ namespace RentARideDB.Services
                 Console.WriteLine($"No active session found for member {memberId}. The user is already logged out.");
             }
         }
+        public async Task<string> GetWelcomeMessageAsync()
+        {
+            var memberId = await GetLoggedInMemberIdAsync();
+            if (memberId == null)
+                return "Bonjour Invité";
+
+            var member = await _dbConnection.Table<Membre>().FirstOrDefaultAsync(m => m.MemberID == memberId.Value);
+            if (member != null && !string.IsNullOrWhiteSpace(member.FirstName))
+                return $"Bonjour {member.FirstName}";
+
+            return "Bienvenue";
+        }
+
         private async Task SeedDataAsync()
         {
             Console.WriteLine("SeedDataAsync() starting...");
