@@ -6,14 +6,14 @@ namespace RentARideDB.Views;
 
 public partial class HistoriqueReservationPage : ContentPage
 {
-    //private readonly ReservationService _reservationService;
+    private readonly ApplicationDbContext _dbContext;
 
-    public HistoriqueReservationPage(HistoriqueReservationViewModel vm)
+    public HistoriqueReservationPage()
 
     {
 		InitializeComponent();
-		//var reservationService = ReservationService.Instance;
-        //HistoriqueReservationViewModel vm = new HistoriqueReservationViewModel(_reservationService);
+        var dbContext = new ApplicationDbContext();
+        HistoriqueReservationViewModel vm = new HistoriqueReservationViewModel(_dbContext);
         BindingContext = vm;
 	}
 

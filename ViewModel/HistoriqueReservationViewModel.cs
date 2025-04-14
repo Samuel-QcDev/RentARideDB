@@ -10,12 +10,11 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
     //private readonly ReservationService _reservationService;
     private readonly ApplicationDbContext _dbContext;
 
-    private ObservableCollection<Reservation> _reservationsResult;
     public ObservableCollection<Reservation> ReservationsResultPast => _dbContext.ReservationsResultPast;
 
     public HistoriqueReservationViewModel(ApplicationDbContext dbContext)
     {
-        _dbContext = dbContext;
+        _dbContext = ApplicationDbContext.Instance;
     }
 
     [RelayCommand]

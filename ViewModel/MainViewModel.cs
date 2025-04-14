@@ -23,9 +23,9 @@ public partial class MainViewModel : LocalBaseViewModel
     {
     private readonly ApplicationDbContext _dbContext;
 
-    //private ObservableCollection<Reservation> _reservationsResult;
-    [ObservableProperty]
-    private ObservableCollection<Reservation> reservationsResultCurrent = new();
+
+
+    public ObservableCollection<Reservation> ReservationsResultCurrent => _dbContext.ReservationsResultCurrent;
 
 
     [ObservableProperty] private string memberEmail;
@@ -34,7 +34,7 @@ public partial class MainViewModel : LocalBaseViewModel
 
     public MainViewModel(ApplicationDbContext dbContext)
     {
-        _dbContext = dbContext;
+        _dbContext = ApplicationDbContext.Instance;
         //ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
 
         _dbContext.ReservationsResultCurrent.Add(new Reservation
@@ -48,14 +48,14 @@ public partial class MainViewModel : LocalBaseViewModel
         });
 
     }
-    public ReservationResult ResultDetails { get; set; }
-    public ReservationSearchViewModel SearchViewModel { get; set; }
+    //public ReservationResult ResultDetails { get; set; }
+    //public ReservationSearchViewModel SearchViewModel { get; set; }
     //public ObservableCollection<Reservation> ReservationsResult { get; } = new();
 
-    public void RefreshReservationsResultCurrent()
-    {
-        ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
-    }
+    //public void RefreshReservationsResultCurrent()
+    //{
+    //    ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
+    //}
 
     [RelayCommand]
         private async Task Reservation()

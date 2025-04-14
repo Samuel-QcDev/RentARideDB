@@ -28,7 +28,7 @@ public static class MauiProgram
 
         // Views
         builder.Services.AddTransient<LoginPage>();
-        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<HistoriqueReservationPage>();
         builder.Services.AddSingleton<ReservationSearchPage>();
         builder.Services.AddTransient<MembreDetails>();
@@ -37,7 +37,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<LoginViewModel>();
         builder.Services.AddSingleton<MainViewModel>(); 
         builder.Services.AddSingleton<HistoriqueReservationViewModel>();
-        builder.Services.AddTransient<ReservationSearchViewModel>();
+        builder.Services.AddSingleton<ReservationSearchViewModel>();
         builder.Services.AddSingleton<MembreViewModel>();
 
         return builder.Build();
