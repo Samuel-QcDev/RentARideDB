@@ -76,6 +76,42 @@ namespace RentARideDB.Services
                 return _instance;
             }
         }
+        public async Task OnReservationAdded()
+        {
+            Console.WriteLine("OnReservationAdded CALLED");
+            ReservationsResultPast.Clear();
+            ReservationsResultCurrent.Clear();
+            var ActiveMemberID = await GetLoggedInMemberIdAsync();
+
+            //List<Reservation> selectedReservation;
+            // Fetch vehicles from the database
+            var AllReservations = await GetReservationsAsync();
+
+            //selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
+
+            // Sort Reservations btw past and current reservations
+            foreach (Reservation reservation in AllReservations)
+            {
+                if (reservation != null)
+                {
+                    if ((reservation.MemberID == ActiveMemberID.Value) && (!(ReservationsResultPast.Contains(reservation)) || !(ReservationsResultCurrent.Contains(reservation))))
+                    {
+                        if (reservation.EndTime < DateTime.Now)
+                        {
+                            ReservationsResultPast.Add(reservation);
+                        }
+                        else
+                        {
+                            ReservationsResultCurrent.Add(reservation);
+                            Console.WriteLine($"Reservation: {reservation.TypeVehicule} | {reservation.VehiculeID} | {reservation.StartTime}");
+                        }
+                    }
+                }
+            }
+            //_mainViewModel.RefreshReservationsResultCurrent();
+            Console.WriteLine($"Number of past reservations is {ReservationsResultPast.Count}");
+            Console.WriteLine($"Number of current reservations is {ReservationsResultCurrent.Count}");
+        }
         private async Task CreateTablesAsync()
         {
             Console.WriteLine("Starting table creation...");
@@ -525,56 +561,56 @@ namespace RentARideDB.Services
             var reservationCount = await _dbConnection.Table<Reservation>().CountAsync();
             if (reservationCount == 0)
             {
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(1), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(2).AddHours(3), DateTime.Today.AddDays(2).AddHours(4).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddHours(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(2), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(0), DateTime.Today.AddDays(1).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(8).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(1), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(2).AddHours(3), DateTime.Today.AddDays(2).AddHours(4).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddHours(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(1).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(2), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(0), DateTime.Today.AddDays(1).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5).AddMinutes(30), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(30), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(8).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(3).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(0), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(5), DateTime.Today.AddDays(0).AddHours(7).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(3), DateTime.Today.AddDays(0).AddHours(4).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
                 // Past Reservations
                 await CreerReservation(7, new DateTime(2025, 03, 11, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
                 await CreerReservation(7, new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Vehicule("Auto", 1, "Essence", []));

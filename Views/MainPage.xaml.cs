@@ -14,5 +14,15 @@ public partial class MainPage : ContentPage
         MainViewModel vm = new MainViewModel(dbContext);
         BindingContext = vm;
     }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Tell the ViewModel to refresh the data
+        if (BindingContext is MainViewModel vm)
+        {
+             vm.LoadReservations(); // Or async: await vm.LoadReservationsAsync();
+        }
+    }
 }
 

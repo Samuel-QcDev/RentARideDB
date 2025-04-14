@@ -37,15 +37,15 @@ public partial class MainViewModel : LocalBaseViewModel
         _dbContext = ApplicationDbContext.Instance;
         //ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
 
-        _dbContext.ReservationsResultCurrent.Add(new Reservation
-        {
-            TypeVehicule = "Test Type",
-            VehiculeID = 2,
-            StartTime = DateTime.Now,
-            EndTime = DateTime.Now.AddHours(2),
-            StationId = 1,
-            CategorieAuto = "Essence"
-        });
+        //_dbContext.ReservationsResultCurrent.Add(new Reservation
+        //{
+        //    TypeVehicule = "Test Type",
+        //    VehiculeID = 2,
+        //    StartTime = DateTime.Now,
+        //    EndTime = DateTime.Now.AddHours(2),
+        //    StationId = 1,
+        //    CategorieAuto = "Essence"
+        //});
 
     }
     //public ReservationResult ResultDetails { get; set; }
@@ -56,7 +56,10 @@ public partial class MainViewModel : LocalBaseViewModel
     //{
     //    ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
     //}
-
+    public async Task LoadReservations()
+    {
+        await _dbContext.OnReservationAdded();
+    }
     [RelayCommand]
         private async Task Reservation()
         {

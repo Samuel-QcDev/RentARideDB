@@ -589,42 +589,42 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     //{
     //    await Shell.Current.GoToAsync("Resultpage");
     //}
-    private async Task OnReservationAdded()
-    {
-        Console.WriteLine("OnReservationAdded CALLED");
-        _dbContext.ReservationsResultPast.Clear();
-        _dbContext.ReservationsResultCurrent.Clear();
-        var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
+    //private async Task OnReservationAdded()
+    //{
+    //    Console.WriteLine("OnReservationAdded CALLED");
+    //    _dbContext.ReservationsResultPast.Clear();
+    //    _dbContext.ReservationsResultCurrent.Clear();
+    //    var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
 
-        //List<Reservation> selectedReservation;
-        // Fetch vehicles from the database
-        var AllReservations = await _dbContext.GetReservationsAsync();
+    //    //List<Reservation> selectedReservation;
+    //    // Fetch vehicles from the database
+    //    var AllReservations = await _dbContext.GetReservationsAsync();
 
-        //selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
+    //    //selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
 
-        // Sort Reservations btw past and current reservations
-        foreach (Reservation reservation in AllReservations)
-        {
-            if (reservation != null)
-            {
-                if ( (reservation.MemberID == ActiveMemberID.Value) && (!(_dbContext.ReservationsResultPast.Contains(reservation)) || !(_dbContext.ReservationsResultCurrent.Contains(reservation))) )
-                {
-                    if (reservation.EndTime < DateTime.Now)
-                    {
-                        _dbContext.ReservationsResultPast.Add(reservation);
-                    }
-                    else
-                    {
-                        _dbContext.ReservationsResultCurrent.Add(reservation);
-                        Console.WriteLine($"Reservation: {reservation.TypeVehicule} | {reservation.VehiculeID} | {reservation.StartTime}");
-                    }
-                }
-            }
-        }
-        //_mainViewModel.RefreshReservationsResultCurrent();
-        Console.WriteLine($"Number of past reservations is {_dbContext.ReservationsResultPast.Count}");
-        Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
-    }
+    //    // Sort Reservations btw past and current reservations
+    //    foreach (Reservation reservation in AllReservations)
+    //    {
+    //        if (reservation != null)
+    //        {
+    //            if ( (reservation.MemberID == ActiveMemberID.Value) && (!(_dbContext.ReservationsResultPast.Contains(reservation)) || !(_dbContext.ReservationsResultCurrent.Contains(reservation))) )
+    //            {
+    //                if (reservation.EndTime < DateTime.Now)
+    //                {
+    //                    _dbContext.ReservationsResultPast.Add(reservation);
+    //                }
+    //                else
+    //                {
+    //                    _dbContext.ReservationsResultCurrent.Add(reservation);
+    //                    Console.WriteLine($"Reservation: {reservation.TypeVehicule} | {reservation.VehiculeID} | {reservation.StartTime}");
+    //                }
+    //            }
+    //        }
+    //    }
+    //    //_mainViewModel.RefreshReservationsResultCurrent();
+    //    Console.WriteLine($"Number of past reservations is {_dbContext.ReservationsResultPast.Count}");
+    //    Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
+    //}
     private async void Reserve(Vehicule vehicule)
     {
         Console.WriteLine("Reserve called for vehicule: " + vehicule.vehiculeId);
@@ -672,7 +672,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         else
         {
             await _dbContext.CreerReservation(ActiveMemberID.Value, ReservationSearchDetails.RequestedStartTime, ReservationSearchDetails.RequestedEndTime,vehicule);
-            await OnReservationAdded();
+            await _dbContext.OnReservationAdded();
             await AddVehiculesBasedOnAllUserInputs();
             Console.WriteLine($"Number of past reservations is {_dbContext.ReservationsResultPast.Count}");
             Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");

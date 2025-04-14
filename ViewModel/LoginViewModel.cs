@@ -52,7 +52,6 @@ public partial class LoginViewModel : LocalBaseViewModel
         }
     }
 
-
     [RelayCommand]
     private async Task Submit()
     {
@@ -82,6 +81,7 @@ public partial class LoginViewModel : LocalBaseViewModel
                     if (((LoginDetails.EmailAddress == membre.MemberEmail) && (LoginDetails.Password == membre.MemberPassword)))
                     {
                         await LoginAsync(membre.MemberID);
+                        await _dbContext.OnReservationAdded();
                         await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberEmail}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
                         return;
                     }

@@ -27,11 +27,11 @@ public static class MauiProgram
 
 
         // Views
-        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddSingleton<LoginPage>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<HistoriqueReservationPage>();
         builder.Services.AddSingleton<ReservationSearchPage>();
-        builder.Services.AddTransient<MembreDetails>();
+        builder.Services.AddSingleton<MembreDetails>();
 
         // View Models
         builder.Services.AddSingleton<LoginViewModel>();
