@@ -22,7 +22,15 @@
                 HorizontalOptions="Start"
                 Text="Prénom : "
                 VerticalOptions="Center"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Prénom " />
+                        <Span Text="*" FontSize="14" TextColor="Red"/>
+                        <Span Text=" : " />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
             <Entry
                 HorizontalOptions="End"
                 Placeholder="Entrer votre prénom"
@@ -31,37 +39,60 @@
         </HorizontalStackLayout>
         <HorizontalStackLayout WidthRequest="300">
             <Label
+        FontSize="Medium"
+        HorizontalOptions="Start"
+        VerticalOptions="Center"
+        VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Nom de Famille :" />
+
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Entry
+        HorizontalOptions="End"
+        Placeholder="Nom de famille"
+        Text="{Binding MembreDetails.LastName}"
+        WidthRequest="150" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout WidthRequest="300">
+            <Label
                 FontSize="Medium"
                 HorizontalOptions="Start"
-                Text="Nom de Famille "
                 VerticalOptions="Center"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center" >
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Nom d'utilisateur " />
+                        <Span Text="*" FontSize="14" TextColor="Red"/>
+                        <Span Text=" : " />
+                    </FormattedString>
+                </Label.FormattedText>
+
+            </Label>
             <Entry
                 HorizontalOptions="End"
-                Placeholder="Nom de famille"
-                Text="{Binding MembreDetails.LastName}"
+                Placeholder="Nom d'utilisateur"
+                Text="{Binding MembreDetails.MemberUserName}"
                 WidthRequest="150" />
         </HorizontalStackLayout>
         <HorizontalStackLayout WidthRequest="300">
             <Label
                 FontSize="Medium"
                 HorizontalOptions="Start"
-                Text="Email Address : "
                 VerticalOptions="Center"
-                VerticalTextAlignment="Center" />
-            <Entry
-                HorizontalOptions="End"
-                Placeholder="Email Address"
-                Text="{Binding MembreDetails.MemberEmail}"
-                WidthRequest="150" />
-        </HorizontalStackLayout>
-        <HorizontalStackLayout WidthRequest="300">
-            <Label
-                FontSize="Medium"
-                HorizontalOptions="Start"
-                Text="Mot de Passe : "
-                VerticalOptions="Center"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center" >
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Mot de Passe " />
+                        <Span Text="*" FontSize="14" TextColor="Red"/>
+                        <Span Text=" : " />
+                    </FormattedString>
+                </Label.FormattedText>
+
+            </Label>
             <Entry
                 HorizontalOptions="End"
                 IsPassword="True"
@@ -91,6 +122,22 @@
                     <x:String>Libre</x:String>
                 </Picker.Items>
             </Picker>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout WidthRequest="300">
+            <Label
+                FontSize="Small"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center" >
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="( Les champs suivis d'une " />
+                        <Span Text="*" FontSize="14" TextColor="Red"/>
+                        <Span Text=" sont obligatoires! )" />
+                    </FormattedString>
+                </Label.FormattedText>
+
+            </Label>
         </HorizontalStackLayout>
 
         <Button

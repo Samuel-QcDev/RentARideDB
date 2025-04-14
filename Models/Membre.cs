@@ -16,7 +16,7 @@ namespace RentARideDB.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get; set; }
-        public string MemberEmail { get; set; }
+        public string MemberUserName { get; set; }
         public string MemberPassword { get; set; }
         public string Level { get; set; }
 
@@ -24,12 +24,12 @@ namespace RentARideDB.Models
         {
 
         }
-        public Membre(string firstName, string password, string email)
+        public Membre(string firstName, string password, string userName)
         {
             this.FirstName = firstName;
             this.MemberPassword = password;
             //this.Level = level;
-            this.MemberEmail = email;
+            this.MemberUserName = userName;
         }
     }
 }

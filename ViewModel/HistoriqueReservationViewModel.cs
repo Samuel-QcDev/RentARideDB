@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RentARideDB.Models;
 using RentARideDB.Services;
 using System.Collections.ObjectModel;
@@ -11,13 +12,14 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
     private readonly ApplicationDbContext _dbContext;
 
     public ObservableCollection<Reservation> ReservationsResultPast => _dbContext.ReservationsResultPast;
-
+    [ObservableProperty] private string welcomeMessage;
     public HistoriqueReservationViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = ApplicationDbContext.Instance;
     }
-        public async Task LoadReservations()
+    public async Task LoadReservations()
     {
+        await _dbContext.GetWelcomeMessageAsync();
         await _dbContext.OnReservationAdded();
     }
     [RelayCommand]

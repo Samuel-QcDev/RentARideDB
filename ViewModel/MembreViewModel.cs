@@ -58,22 +58,29 @@ public partial class MembreViewModel : LocalBaseViewModel
     {
         var memberDetails = this.MembreDetails;
         var memberFirstName = memberDetails.FirstName;
-        var memberEmail = memberDetails.MemberEmail;
+        var memberUserName = memberDetails.MemberUserName;
         var memberPassword = memberDetails.MemberPassword;
-        await _dbContext.CreateAsync(new Membre(memberFirstName, memberPassword, memberEmail));
-
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        var message = "Your account was created!";
-        ToastDuration duration = ToastDuration.Short;
-        var fontSize = 14;
-        var toast = Toast.Make(message, duration, fontSize);
-        await toast.Show(cancellationTokenSource.Token);
 
         //var navigationParameter = new Dictionary<string, object> { { "member", memberDetails}};
 
         // await Shell.Current.DisplayAlert("Record Added", "Employee Details Successfully submitted", "OK");
+        if (memberFirstName == null || memberUserName == null || memberPassword == null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Missing Required Fields", $"Please fill all required fields.", "OK");
+        }
+        else
+        {
+            await _dbContext.CreateAsync(new Membre(memberFirstName, memberPassword, memberUserName));
 
-        await Shell.Current.GoToAsync($"Loginpage?memberEmail={memberEmail}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var message = "Your account was created!";
+            ToastDuration duration = ToastDuration.Short;
+            var fontSize = 14;
+            var toast = Toast.Make(message, duration, fontSize);
+            await toast.Show(cancellationTokenSource.Token);
+            await Shell.Current.GoToAsync($"Loginpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+        }
+
         //await Shell.Current.GoToAsync($"Loginpage, navigationParameter");
     }
     [RelayCommand]

@@ -33,6 +33,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberEmail;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
+    [ObservableProperty] private string welcomeMessage;
 
     [ObservableProperty]
     private bool isCheckedMP3;
@@ -582,49 +583,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             }
         }
     }
-
-    // Unused
-    //[RelayCommand]
-    //private static async Task Search()
-    //{
-    //    await Shell.Current.GoToAsync("Resultpage");
-    //}
-    //private async Task OnReservationAdded()
-    //{
-    //    Console.WriteLine("OnReservationAdded CALLED");
-    //    _dbContext.ReservationsResultPast.Clear();
-    //    _dbContext.ReservationsResultCurrent.Clear();
-    //    var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
-
-    //    //List<Reservation> selectedReservation;
-    //    // Fetch vehicles from the database
-    //    var AllReservations = await _dbContext.GetReservationsAsync();
-
-    //    //selectedReservation = AllReservations.Where(v => v.TypeVehicule == ReservationSearchDetails.TypeVehicule).ToList(); 
-
-    //    // Sort Reservations btw past and current reservations
-    //    foreach (Reservation reservation in AllReservations)
-    //    {
-    //        if (reservation != null)
-    //        {
-    //            if ( (reservation.MemberID == ActiveMemberID.Value) && (!(_dbContext.ReservationsResultPast.Contains(reservation)) || !(_dbContext.ReservationsResultCurrent.Contains(reservation))) )
-    //            {
-    //                if (reservation.EndTime < DateTime.Now)
-    //                {
-    //                    _dbContext.ReservationsResultPast.Add(reservation);
-    //                }
-    //                else
-    //                {
-    //                    _dbContext.ReservationsResultCurrent.Add(reservation);
-    //                    Console.WriteLine($"Reservation: {reservation.TypeVehicule} | {reservation.VehiculeID} | {reservation.StartTime}");
-    //                }
-    //            }
-    //        }
-    //    }
-    //    //_mainViewModel.RefreshReservationsResultCurrent();
-    //    Console.WriteLine($"Number of past reservations is {_dbContext.ReservationsResultPast.Count}");
-    //    Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
-    //}
     private async void Reserve(Vehicule vehicule)
     {
         Console.WriteLine("Reserve called for vehicule: " + vehicule.vehiculeId);
@@ -676,9 +634,14 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             await AddVehiculesBasedOnAllUserInputs();
             Console.WriteLine($"Number of past reservations is {_dbContext.ReservationsResultPast.Count}");
             Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
-            Shell.Current.GoToAsync("Mainpage");
+            await Shell.Current.GoToAsync("Mainpage");
             Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
         }
+    }
+    public async Task LoadReservations()
+    {
+        await _dbContext.GetWelcomeMessageAsync();
+        await _dbContext.OnReservationAdded();
     }
     private void Cancel(Reservation reservation)
     {
@@ -689,14 +652,13 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     [RelayCommand]
     private async Task BackToMainPage()
     {
-
         await Shell.Current.GoToAsync("Mainpage");
     }
     [RelayCommand]
     private async Task Logout()
     {
         var ActiveMemberID = await _dbContext.GetLoggedInMemberIdAsync();
-        _dbContext.LogoutAsync(ActiveMemberID.Value);
+        await _dbContext.LogoutAsync(ActiveMemberID.Value);
         await Shell.Current.GoToAsync("Loginpage");
     }
 }

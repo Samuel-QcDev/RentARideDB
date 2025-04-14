@@ -37,7 +37,16 @@ public partial class ReservationSearchPage : ContentPage
         ReservationSearchViewModel vm = new ReservationSearchViewModel(_dbContext);
         BindingContext = vm;
         }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
 
+        // Tell the ViewModel to refresh the data
+        if (BindingContext is ReservationSearchViewModel vm)
+        {
+            await vm.LoadReservations(); 
+        }
+    }
     // This method is called when the page is about to appear
     //protected override void OnAppearing()
     //{
@@ -46,33 +55,33 @@ public partial class ReservationSearchPage : ContentPage
     //    // Retrieve the query parameter 'name' passed in the navigation
     //    var name = Shell.Current?.CurrentState?.QueryParameters["name"];
 
-        //public ReservationSearchPage(DateTime startDate, DateTime endDate, DateTime startTime, DateTime endTime, string type, string station,
-        //        [Optional] string categorie, [Optional] Enum options)
-        //{
-        //    StartDate = DateTime.Now;
-        //    BindingContext = vm;
-        //    InitializeComponent();
+    //public ReservationSearchPage(DateTime startDate, DateTime endDate, DateTime startTime, DateTime endTime, string type, string station,
+    //        [Optional] string categorie, [Optional] Enum options)
+    //{
+    //    StartDate = DateTime.Now;
+    //    BindingContext = vm;
+    //    InitializeComponent();
 
-        //    StartTime = startTime;
-        //    EndTime = endTime;
-        //    StartDate = startDate;
-        //    EndDate = endDate;
-        //    TypeVehicule = type;
-        //    CategorieAuto = categorie;
-        //    StationId = station;
-        //    Options = options;
-        //}
+    //    StartTime = startTime;
+    //    EndTime = endTime;
+    //    StartDate = startDate;
+    //    EndDate = endDate;
+    //    TypeVehicule = type;
+    //    CategorieAuto = categorie;
+    //    StationId = station;
+    //    Options = options;
+    //}
 
-        //private void VehicleType_OnSelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (VehicleType.SelectedItem.ToString() == "Auto")
-        //    {
-        //        OptionsLayout.IsVisible = true;
+    //private void VehicleType_OnSelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    if (VehicleType.SelectedItem.ToString() == "Auto")
+    //    {
+    //        OptionsLayout.IsVisible = true;
 
-        //    }
-        //    else
-        //    {
-        //        OptionsLayout.IsVisible = false;
-        //    }
-        //}
-    }
+    //    }
+    //    else
+    //    {
+    //        OptionsLayout.IsVisible = false;
+    //    }
+    //}
+}

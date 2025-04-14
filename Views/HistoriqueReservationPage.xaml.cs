@@ -16,14 +16,14 @@ public partial class HistoriqueReservationPage : ContentPage
         HistoriqueReservationViewModel vm = new HistoriqueReservationViewModel(_dbContext);
         BindingContext = vm;
 	}
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
         // Tell the ViewModel to refresh the data
         if (BindingContext is HistoriqueReservationViewModel vm)
         {
-            vm.LoadReservations(); // Or async: await vm.LoadReservationsAsync();
+            await vm.LoadReservations(); 
         }
     }
 

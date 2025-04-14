@@ -13,6 +13,7 @@
     <!--  Toolbar with a button  -->
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="home.png" Command="{Binding BackToMainPageCommand}"/>
+        <ToolbarItem Text="{Binding WelcomeMessage}" />
         <ToolbarItem Text="Logout" Command="{Binding LogoutCommand}"/>
     </ContentPage.ToolbarItems>
 

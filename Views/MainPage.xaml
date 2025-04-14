@@ -13,8 +13,7 @@
     </Shell.BackButtonBehavior>
     <ContentPage.ToolbarItems>
         <ToolbarItem
-            Text="{Binding WelcomeMessage}" 
-            Command="{Binding LogoutCommand}"/>
+            Text="{Binding WelcomeMessage}" />
         <ToolbarItem
             Text="Logout" 
             Command="{Binding LogoutCommand}"/>

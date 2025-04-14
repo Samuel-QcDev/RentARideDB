@@ -15,7 +15,7 @@ using System.Collections.ObjectModel;
 
 namespace RentARideDB.ViewModel;
 
-[QueryProperty(nameof(MemberEmail), "memberEmail")]
+[QueryProperty(nameof(MemberUserName), "memberEmail")]
 [QueryProperty(nameof(MemberPassword), "memberPassword")]
 [QueryProperty(nameof(MemberFirstName), "memberFirstName")]
 
@@ -28,7 +28,7 @@ public partial class MainViewModel : LocalBaseViewModel
     public ObservableCollection<Reservation> ReservationsResultCurrent => _dbContext.ReservationsResultCurrent;
 
 
-    [ObservableProperty] private string memberEmail;
+    [ObservableProperty] private string memberUserName;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
     [ObservableProperty] private string welcomeMessage;
@@ -57,19 +57,19 @@ public partial class MainViewModel : LocalBaseViewModel
     //{
     //    ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
     //}
-    public async Task LoadWelcomeMessageAsync()
-    {
-        WelcomeMessage = await _dbContext.GetWelcomeMessageAsync(); // from ApplicationDbContext
-    }
+    //public async Task LoadWelcomeMessageAsync()
+    //{
+    //    WelcomeMessage = await _dbContext.GetWelcomeMessageAsync(); // from ApplicationDbContext
+    //}
     public async Task LoadReservations()
     {
-        await LoadWelcomeMessageAsync();
+        await _dbContext.GetWelcomeMessageAsync();
         await _dbContext.OnReservationAdded();
     }
     [RelayCommand]
         private async Task Reservation()
         {
-            await Shell.Current.GoToAsync($"Reservationpage?memberEmail={memberEmail}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+            await Shell.Current.GoToAsync($"Reservationpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
         }
         [RelayCommand]
         private async Task ConsultHistory()

@@ -14,14 +14,14 @@ using System.Runtime.CompilerServices;
 
 namespace RentARideDB.ViewModel;
 
-[QueryProperty(nameof(MemberEmail), "memberEmail")]
+[QueryProperty(nameof(MemberUserName), "memberUserName")]
 [QueryProperty(nameof(MemberPassword), "memberPassword")]
 [QueryProperty(nameof(MemberFirstName), "memberFirstName")]
 public partial class LoginViewModel : LocalBaseViewModel
 {
     private readonly ApplicationDbContext _dbContext;
 
-    [ObservableProperty] private string memberEmail;
+    [ObservableProperty] private string memberUserName;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
     public LoginViewModel(ApplicationDbContext dbContext)
@@ -55,11 +55,7 @@ public partial class LoginViewModel : LocalBaseViewModel
     [RelayCommand]
     private async Task Submit()
     {
-        if (((LoginDetails.EmailAddress == "root") && (LoginDetails.Password == "root")))
-        {
-            await Shell.Current.GoToAsync("Mainpage");
-        }
-        else if (LoginDetails == null)
+        if (LoginDetails == null)
         {
             await Application.Current.MainPage.DisplayAlert(
                 "Account invalid",
@@ -68,7 +64,6 @@ public partial class LoginViewModel : LocalBaseViewModel
         }
         else
         {
-            List<Membre> selectedMember;
             // Fetch vehicles from the database
             var AllMembers = await _dbContext.GetMembresAsync();
 
@@ -78,11 +73,11 @@ public partial class LoginViewModel : LocalBaseViewModel
             {
                 foreach (Membre membre in AllMembers)
                 {
-                    if (((LoginDetails.EmailAddress == membre.MemberEmail) && (LoginDetails.Password == membre.MemberPassword)))
+                    if (((LoginDetails.EmailAddress == membre.MemberUserName) && (LoginDetails.Password == membre.MemberPassword)))
                     {
                         await LoginAsync(membre.MemberID);
                         await _dbContext.OnReservationAdded();
-                        await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberEmail}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
+                        await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberUserName}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
                         return;
                     }
                 }
@@ -99,24 +94,6 @@ public partial class LoginViewModel : LocalBaseViewModel
                                 "OK");
             }
         }
-
-        //else if ((LoginDetails.Password != MemberPassword) && (LoginDetails.EmailAddress != MemberEmail))
-        //{
-        //    await Application.Current.MainPage.DisplayAlert(
-        //        "Invalid account",
-        //        $"Please create an account.",
-        //        "OK");
-        //}
-        //else if (LoginDetails.EmailAddress != MemberEmail)
-        //{
-        //    await Application.Current.MainPage.DisplayAlert(
-
-        //        "Submit",
-        //        $"You entered the wrong Email Address. Please enter a valid Email or create an account.",
-        //        "OK");
-        //}
-        //else if (LoginDetails.Password != MemberPassword)
-
     }
     [RelayCommand]
     private static async Task CreateAccount()
