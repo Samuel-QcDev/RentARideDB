@@ -47,17 +47,17 @@
                                     <Label FontSize="Small" Text="{Binding EndTime}" />
                                 </VerticalStackLayout>
 
-                                <!--<VerticalStackLayout Padding="0" Spacing="2">
+                                <VerticalStackLayout Padding="0" Spacing="2">
                                 <Label FontSize="Small" Text="{Binding CategorieAuto}" />
 
                             </VerticalStackLayout>
-                            <VerticalStackLayout Padding="0" Spacing="2">
+                            <!--<VerticalStackLayout Padding="0" Spacing="2">
                                 <Label FontSize="Small" Text="{Binding AutoOptions}" />
 
                             </VerticalStackLayout>-->
-                                <!--<Button Text="Cancel"
+                                <Button Text="Cancel"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReservationSearchViewModel}}, Path=CancelCommand}"
-                                    CommandParameter="{Binding .}" />-->
+                                    CommandParameter="{Binding .}" />
 
                             </HorizontalStackLayout>
                         </Frame>

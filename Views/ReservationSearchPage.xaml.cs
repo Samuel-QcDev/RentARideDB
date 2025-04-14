@@ -16,6 +16,7 @@ namespace RentARideDB.Views;
 public partial class ReservationSearchPage : ContentPage
 {
     private ApplicationDbContext _dbContext;
+    private readonly MainViewModel _mainViewModel;
 
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

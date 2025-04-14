@@ -23,8 +23,9 @@ public partial class MainViewModel : LocalBaseViewModel
     {
     private readonly ApplicationDbContext _dbContext;
 
-    private ObservableCollection<Reservation> _reservationsResult;
-    public ObservableCollection<Reservation> ReservationsResultCurrent => _dbContext.ReservationsResultCurrent;
+    //private ObservableCollection<Reservation> _reservationsResult;
+    [ObservableProperty]
+    private ObservableCollection<Reservation> reservationsResultCurrent = new();
 
 
     [ObservableProperty] private string memberEmail;
@@ -34,11 +35,27 @@ public partial class MainViewModel : LocalBaseViewModel
     public MainViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
+        //ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
+
+        _dbContext.ReservationsResultCurrent.Add(new Reservation
+        {
+            TypeVehicule = "Test Type",
+            VehiculeID = 2,
+            StartTime = DateTime.Now,
+            EndTime = DateTime.Now.AddHours(2),
+            StationId = 1,
+            CategorieAuto = "Essence"
+        });
+
     }
     public ReservationResult ResultDetails { get; set; }
     public ReservationSearchViewModel SearchViewModel { get; set; }
-    public ObservableCollection<Reservation> ReservationsResult { get; } = new();
+    //public ObservableCollection<Reservation> ReservationsResult { get; } = new();
 
+    public void RefreshReservationsResultCurrent()
+    {
+        ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
+    }
 
     [RelayCommand]
         private async Task Reservation()
@@ -58,5 +75,6 @@ public partial class MainViewModel : LocalBaseViewModel
         _dbContext.LogoutAsync(ActiveMemberID.Value);
         await Shell.Current.GoToAsync("Loginpage");
     }
+
 }
 

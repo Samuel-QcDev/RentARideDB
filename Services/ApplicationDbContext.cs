@@ -29,8 +29,8 @@ namespace RentARideDB.Services
             SQLite.SQLiteOpenFlags.SharedCache; // enable multi-threaded database access
 
         private static ApplicationDbContext _instance;
-        public ObservableCollection<Reservation> ReservationsResultPast { get; set; } = new();
-        public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; } = new();
+        public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
+        public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
         public List<int> selectedStationID { get; set; } = new();
 
         public ApplicationDbContext()
@@ -39,6 +39,8 @@ namespace RentARideDB.Services
             //DeleteDatabase();
             _dbConnection = new SQLiteAsyncConnection(databasePath, Flags);
             Console.WriteLine($"Database path: {databasePath}");
+            ReservationsResultPast = new ObservableCollection<Reservation>();
+            ReservationsResultCurrent = new ObservableCollection<Reservation>();
         }
         //private async Task Init()
         //{
@@ -678,6 +680,10 @@ namespace RentARideDB.Services
             {
                 Console.WriteLine($"Inserted reservation with Id: {reservation.ReservationID}, Start: {reservation.StartTime}, End: {reservation.EndTime}, at station {reservation.StationId} for a {vehicule.type}, {vehicule.categorieAuto}, with no options.");
             }
+        }
+        public void AddReservation(Reservation reservation)
+        {
+            ReservationsResultCurrent.Add(reservation);
         }
     }
 }
