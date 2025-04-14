@@ -31,11 +31,25 @@ public partial class MainViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberUserName;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
-    [ObservableProperty] private string welcomeMessage;
+    private string _welcomeMessage;
+
+    public string WelcomeMessage
+    {
+        get => ApplicationDbContext.Instance.WelcomeMessage;
+        set
+        {
+            if (_welcomeMessage != value)
+            {
+                _welcomeMessage = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public MainViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = ApplicationDbContext.Instance;
+        SetWelcomeMessage();
         //ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
 
         //_dbContext.ReservationsResultCurrent.Add(new Reservation
@@ -49,21 +63,14 @@ public partial class MainViewModel : LocalBaseViewModel
         //});
 
     }
-    //public ReservationResult ResultDetails { get; set; }
-    //public ReservationSearchViewModel SearchViewModel { get; set; }
-    //public ObservableCollection<Reservation> ReservationsResult { get; } = new();
+    private async void SetWelcomeMessage()
+    {
+        await ApplicationDbContext.Instance.SetWelcomeMessageAsync();
+        WelcomeMessage = ApplicationDbContext.Instance.WelcomeMessage;
+    }
 
-    //public void RefreshReservationsResultCurrent()
-    //{
-    //    ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
-    //}
-    //public async Task LoadWelcomeMessageAsync()
-    //{
-    //    WelcomeMessage = await _dbContext.GetWelcomeMessageAsync(); // from ApplicationDbContext
-    //}
     public async Task LoadReservations()
     {
-        await _dbContext.GetWelcomeMessageAsync();
         await _dbContext.OnReservationAdded();
     }
     [RelayCommand]

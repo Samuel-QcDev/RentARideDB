@@ -12,11 +12,8 @@
         <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
     <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Text="{Binding WelcomeMessage}" />
-        <ToolbarItem
-            Text="Logout" 
-            Command="{Binding LogoutCommand}"/>
+        <ToolbarItem Text="{Binding WelcomeMessage}" />
+        <ToolbarItem Text="Logout" Command="{Binding LogoutCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView>

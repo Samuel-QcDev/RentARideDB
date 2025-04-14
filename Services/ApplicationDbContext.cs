@@ -33,6 +33,7 @@ namespace RentARideDB.Services
         public ObservableCollection<Reservation> ReservationsResultPast { get; set; }
         public ObservableCollection<Reservation> ReservationsResultCurrent { get; set; }
         public List<int> selectedStationID { get; set; } = new();
+        public string WelcomeMessage { get; private set; }
 
         public ApplicationDbContext()
         {
@@ -43,17 +44,13 @@ namespace RentARideDB.Services
             ReservationsResultPast = new ObservableCollection<Reservation>();
             ReservationsResultCurrent = new ObservableCollection<Reservation>();
         }
-        //private async Task Init()
-        //{
-        //    await CreateTablesAsync();  // Create tables asynchronously
-        //    await SeedDataAsync();
-        //}
+
         public async Task InitAsync()
         {
             if (_instance == null) return;
 
             Console.WriteLine("Starting Initialization...");
-            TestDatabaseConnection();
+            await TestDatabaseConnection();
             if (await IsDatabaseConnectedAsync())
             {
                 await CreateTablesAsync();
@@ -262,13 +259,6 @@ namespace RentARideDB.Services
             await DropAndRecreateTablesAsync();
             Console.WriteLine("Database has been reset.");
         }
-        private async void ResetDatabase()
-        {
-            await _dbConnection.DropTableAsync<Velo>();   // Drop the table if it exists
-            await _dbConnection.DropTableAsync<Moto>();   // Drop the table if it exists
-            await _dbConnection.DropTableAsync<Auto>();   // Drop the table if it exists
-            await _dbConnection.DropTableAsync<Vehicule>(); // Drop Vehicule if exists
-        }
         public void DeleteDatabase()
         {
             string databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RentARideDB.DbContext.db3");
@@ -441,7 +431,28 @@ namespace RentARideDB.Services
 
             return "Bienvenue";
         }
+        // Method to get the logged-in member's first name and set the WelcomeMessage
+        public async Task SetWelcomeMessageAsync()
+        {
+            var memberId = await GetLoggedInMemberIdAsync();
+            if (memberId.HasValue) // Ensure that the memberId is not null
+            {
+                var member = await _dbConnection.Table<Membre>().FirstOrDefaultAsync(m => m.MemberID == memberId.Value);
 
+                if (member != null)
+                {
+                    WelcomeMessage = $"Bonjour {member.FirstName}";
+                }
+                else
+                {
+                    WelcomeMessage = "Bonjour Invité"; // In case no member is found
+                }
+            }
+            else
+            {
+                WelcomeMessage = "Bienvenue"; // Default message if no memberId is found
+            }
+        }
         private async Task SeedDataAsync()
         {
             Console.WriteLine("SeedDataAsync() starting...");
@@ -702,10 +713,6 @@ namespace RentARideDB.Services
                 await CreateAsync(vehicule);
                 Console.WriteLine($"Inserted {vehicule.type} with Id: {vehicule.vehiculeId} at station {vehicule.vehiculeStationId}");
             }
-        }
-        public async Task creerMembre(string name, string password, string email)
-        {
-            await CreateAsync(new Membre(name, password, email));
         }
         public async Task CreerStation(string address, int spaces, int bikeSpaces)
         {

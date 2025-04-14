@@ -33,8 +33,20 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberEmail;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
-    [ObservableProperty] private string welcomeMessage;
 
+    private string _welcomeMessage;
+    public string WelcomeMessage
+    {
+        get => ApplicationDbContext.Instance.WelcomeMessage;
+        set
+        {
+            if (_welcomeMessage != value)
+            {
+                _welcomeMessage = value;
+                OnPropertyChanged();
+            }
+        }
+    }
     [ObservableProperty]
     private bool isCheckedMP3;
     [ObservableProperty]
@@ -168,8 +180,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public ReservationSearchViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-
-        //Console.WriteLine($"MemberEmail: {MemberEmail}, MemberPassword: {MemberPassword}, MemberFirstName: {MemberFirstName}");
+        SetWelcomeMessage();
 
         // Initialize the Commands for UI inputs
         OnVehicleTypeChangedCommand = new RelayCommand(OnVehicleTypeChanged);
@@ -226,7 +237,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public async Task InitRes()
     {
         await AddVehiculesBasedOnAllUserInputs();   // Populate the CollectionView with vehicules according to initial conditions
-        //await OnReservationAdded();
     }
 
     public async void CreerVehicule(string type, string vehiculeID, int stationID, string categorie = null, List<string> carOptions = null)
@@ -261,10 +271,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             await _dbContext.CreateAsync(vehicule);
             Console.WriteLine($"Inserted Vehicule with Id: {vehicule.vehiculeId}");
         }
-    }
-    public async void creerMembre(string name, string password, string email)
-    {
-        await _dbContext.CreateAsync(new Membre(name, password, email));
     }
     //List of all stations
     Station[] myStations = new Station[20];
@@ -638,9 +644,13 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
         }
     }
+    private async void SetWelcomeMessage()
+    {
+        await ApplicationDbContext.Instance.SetWelcomeMessageAsync();
+        WelcomeMessage = ApplicationDbContext.Instance.WelcomeMessage;
+    }
     public async Task LoadReservations()
     {
-        await _dbContext.GetWelcomeMessageAsync();
         await _dbContext.OnReservationAdded();
     }
     private void Cancel(Reservation reservation)

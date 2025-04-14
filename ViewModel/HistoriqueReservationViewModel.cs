@@ -8,18 +8,34 @@ namespace RentARideDB.ViewModel;
 
 public partial class HistoriqueReservationViewModel : LocalBaseViewModel
 {
-    //private readonly ReservationService _reservationService;
     private readonly ApplicationDbContext _dbContext;
-
     public ObservableCollection<Reservation> ReservationsResultPast => _dbContext.ReservationsResultPast;
-    [ObservableProperty] private string welcomeMessage;
+    private string _welcomeMessage;
+
+    public string WelcomeMessage
+    {
+        get => ApplicationDbContext.Instance.WelcomeMessage;
+        set
+        {
+            if (_welcomeMessage != value)
+            {
+                _welcomeMessage = value;
+                OnPropertyChanged();
+            }
+        }
+    }
     public HistoriqueReservationViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = ApplicationDbContext.Instance;
+        SetWelcomeMessage();
+    }
+    private async void SetWelcomeMessage()
+    {
+        await ApplicationDbContext.Instance.SetWelcomeMessageAsync();
+        WelcomeMessage = ApplicationDbContext.Instance.WelcomeMessage;
     }
     public async Task LoadReservations()
     {
-        await _dbContext.GetWelcomeMessageAsync();
         await _dbContext.OnReservationAdded();
     }
     [RelayCommand]

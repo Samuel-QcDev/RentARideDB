@@ -21,7 +21,7 @@ public partial class MainPage : ContentPage
         // Tell the ViewModel to refresh the data
         if (BindingContext is MainViewModel vm)
         {
-             await vm.LoadReservations(); // Or async: await vm.LoadReservationsAsync();
+             await vm.LoadReservations(); 
         }
     }
 }

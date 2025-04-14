@@ -10,12 +10,14 @@ public partial class App : Application
     {
 
         InitializeComponent();
-        // Initialize database and create tables before setting MainPage
-        var dbContext = ApplicationDbContext.Instance;
-        dbContext.InitAsync().ConfigureAwait(false);  // Ensure tables are created asynchronously
-        //_dbContext = ApplicationDbContext.Instance;
-        dbContext.OnReservationAdded();
+        InitializeAsync();
 
         MainPage = new AppShell();
+    }
+    private async void InitializeAsync()
+    {
+        var dbContext = ApplicationDbContext.Instance;
+        await dbContext.InitAsync().ConfigureAwait(false);
+        await dbContext.OnReservationAdded();
     }
 }
