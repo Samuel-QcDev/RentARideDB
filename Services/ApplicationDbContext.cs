@@ -434,24 +434,21 @@ namespace RentARideDB.Services
         // Method to get the logged-in member's first name and set the WelcomeMessage
         public async Task SetWelcomeMessageAsync()
         {
-            var memberId = await GetLoggedInMemberIdAsync();
-            if (memberId.HasValue) // Ensure that the memberId is not null
-            {
-                var member = await _dbConnection.Table<Membre>().FirstOrDefaultAsync(m => m.MemberID == memberId.Value);
+            int? memberId = await GetLoggedInMemberIdAsync();
 
-                if (member != null)
-                {
-                    WelcomeMessage = $"Bonjour {member.FirstName}";
-                }
-                else
-                {
-                    WelcomeMessage = "Bonjour Invité"; // In case no member is found
-                }
-            }
-            else
+            if (!memberId.HasValue)
             {
-                WelcomeMessage = "Bienvenue"; // Default message if no memberId is found
+                WelcomeMessage = "Bonjour Invité";
+                return;
             }
+
+            var member = await _dbConnection.Table<Membre>()
+                .FirstOrDefaultAsync(m => m.MemberID == memberId.Value);
+
+            if (member != null && !string.IsNullOrWhiteSpace(member.FirstName))
+                WelcomeMessage = $"Bonjour {member.FirstName}";
+            else
+                WelcomeMessage = "Bienvenue";
         }
         private async Task SeedDataAsync()
         {
@@ -737,6 +734,21 @@ namespace RentARideDB.Services
             {
                 Console.WriteLine($"Inserted reservation with Id: {reservation.ReservationID}, Start: {reservation.StartTime}, End: {reservation.EndTime}, at station {reservation.StationId} for a {vehicule.type}, {vehicule.categorieAuto}, with no options.");
             }
+        }
+        public async Task<bool> CancelReservationAsync(int reservationId)
+        {
+            // Find the reservation to delete
+            var reservation = await _dbConnection.Table<Reservation>()
+                                                  .FirstOrDefaultAsync(r => r.ReservationID == reservationId);
+
+            if (reservation != null)
+            {
+                // Delete the reservation from the database
+                await _dbConnection.DeleteAsync(reservation);
+                return true; // Return true if the deletion was successful
+            }
+
+            return false; // Return false if the reservation was not found
         }
         public void AddReservation(Reservation reservation)
         {

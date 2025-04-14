@@ -12,7 +12,7 @@ public partial class HistoriqueReservationPage : ContentPage
 
     {
 		InitializeComponent();
-        var dbContext = new ApplicationDbContext();
+        _dbContext = ApplicationDbContext.Instance;
         HistoriqueReservationViewModel vm = new HistoriqueReservationViewModel(_dbContext);
         BindingContext = vm;
 	}
@@ -20,11 +20,14 @@ public partial class HistoriqueReservationPage : ContentPage
     {
         base.OnAppearing();
 
-        // Tell the ViewModel to refresh the data
-        if (BindingContext is HistoriqueReservationViewModel vm)
+        // Refresh welcome message when page appears
+        await _dbContext.SetWelcomeMessageAsync();
+
+        // Now manually update the ViewModel value
+        var vm = BindingContext as HistoriqueReservationViewModel;
+        if (vm != null)
         {
-            await vm.LoadReservations(); 
+            vm.WelcomeMessage = _dbContext.WelcomeMessage;
         }
     }
-
 }

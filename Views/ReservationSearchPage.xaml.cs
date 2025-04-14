@@ -41,12 +41,17 @@ public partial class ReservationSearchPage : ContentPage
     {
         base.OnAppearing();
 
-        // Tell the ViewModel to refresh the data
-        if (BindingContext is ReservationSearchViewModel vm)
+        // Refresh welcome message when page appears
+        await _dbContext.SetWelcomeMessageAsync();
+
+        // Now manually update the ViewModel value
+        var vm = BindingContext as ReservationSearchViewModel;
+        if (vm != null)
         {
-            await vm.LoadReservations(); 
+            vm.WelcomeMessage = _dbContext.WelcomeMessage;
         }
     }
+
     // This method is called when the page is about to appear
     //protected override void OnAppearing()
     //{

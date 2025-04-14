@@ -77,6 +77,7 @@ public partial class LoginViewModel : LocalBaseViewModel
                     {
                         await LoginAsync(membre.MemberID);
                         await _dbContext.OnReservationAdded();
+                        await _dbContext.SetWelcomeMessageAsync();
                         await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberUserName}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
                         return;
                     }

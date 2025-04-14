@@ -34,19 +34,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
 
-    private string _welcomeMessage;
-    public string WelcomeMessage
-    {
-        get => ApplicationDbContext.Instance.WelcomeMessage;
-        set
-        {
-            if (_welcomeMessage != value)
-            {
-                _welcomeMessage = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    [ObservableProperty]
+    private string welcomeMessage;
     [ObservableProperty]
     private bool isCheckedMP3;
     [ObservableProperty]
@@ -653,11 +642,9 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     {
         await _dbContext.OnReservationAdded();
     }
-    private void Cancel(Reservation reservation)
+    private async void Cancel(Reservation reservation)
     {
-        //Console.WriteLine(ReservationService.ReservationsResultCurrent.Count);
-        //ReservationService.CancelReservation(reservation);
-        //Console.WriteLine(ReservationService.ReservationsResultCurrent.Count);
+        await _dbContext.CancelReservationAsync(reservation.ReservationID);
     }
     [RelayCommand]
     private async Task BackToMainPage()

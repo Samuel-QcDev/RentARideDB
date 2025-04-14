@@ -18,6 +18,6 @@ public partial class App : Application
     {
         var dbContext = ApplicationDbContext.Instance;
         await dbContext.InitAsync().ConfigureAwait(false);
-        await dbContext.OnReservationAdded();
+        //await dbContext.OnReservationAdded();
     }
 }

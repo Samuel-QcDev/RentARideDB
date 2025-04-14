@@ -10,24 +10,14 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
 {
     private readonly ApplicationDbContext _dbContext;
     public ObservableCollection<Reservation> ReservationsResultPast => _dbContext.ReservationsResultPast;
-    private string _welcomeMessage;
-
-    public string WelcomeMessage
-    {
-        get => ApplicationDbContext.Instance.WelcomeMessage;
-        set
-        {
-            if (_welcomeMessage != value)
-            {
-                _welcomeMessage = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    public IRelayCommand<Reservation> CancelCommand { get; }
+    [ObservableProperty]
+    private string welcomeMessage;
     public HistoriqueReservationViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = ApplicationDbContext.Instance;
         SetWelcomeMessage();
+        CancelCommand = new RelayCommand<Reservation>(Cancel);
     }
     private async void SetWelcomeMessage()
     {
@@ -37,6 +27,10 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
     public async Task LoadReservations()
     {
         await _dbContext.OnReservationAdded();
+    }
+    private async void Cancel(Reservation reservation)
+    {
+        await _dbContext.CancelReservationAsync(reservation.ReservationID);
     }
     [RelayCommand]
     private async Task BackToMainPage()

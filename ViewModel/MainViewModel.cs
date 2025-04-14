@@ -23,7 +23,7 @@ public partial class MainViewModel : LocalBaseViewModel
     {
     private readonly ApplicationDbContext _dbContext;
 
-
+    public IRelayCommand<Reservation> CancelCommand { get; }
 
     public ObservableCollection<Reservation> ReservationsResultCurrent => _dbContext.ReservationsResultCurrent;
 
@@ -31,25 +31,13 @@ public partial class MainViewModel : LocalBaseViewModel
     [ObservableProperty] private string memberUserName;
     [ObservableProperty] private string memberPassword;
     [ObservableProperty] private string memberFirstName;
-    private string _welcomeMessage;
-
-    public string WelcomeMessage
-    {
-        get => ApplicationDbContext.Instance.WelcomeMessage;
-        set
-        {
-            if (_welcomeMessage != value)
-            {
-                _welcomeMessage = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    [ObservableProperty] private string welcomeMessage;
 
     public MainViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = ApplicationDbContext.Instance;
-        SetWelcomeMessage();
+        WelcomeMessage = _dbContext.WelcomeMessage;
+        CancelCommand = new RelayCommand<Reservation>(Cancel);
         //ReservationsResultCurrent = _dbContext.ReservationsResultCurrent;
 
         //_dbContext.ReservationsResultCurrent.Add(new Reservation
@@ -63,27 +51,44 @@ public partial class MainViewModel : LocalBaseViewModel
         //});
 
     }
-    private async void SetWelcomeMessage()
+    private async Task SetWelcomeMessageAsync()
     {
-        await ApplicationDbContext.Instance.SetWelcomeMessageAsync();
-        WelcomeMessage = ApplicationDbContext.Instance.WelcomeMessage;
-    }
+        int? memberId = await _dbContext.GetLoggedInMemberIdAsync();
 
+        if (!memberId.HasValue)
+        {
+            WelcomeMessage = "Bonjour Invité";
+            return;
+        }
+
+        var member = await _dbContext.DbConnection
+            .Table<Membre>()
+            .FirstOrDefaultAsync(m => m.MemberID == memberId.Value);
+
+        WelcomeMessage = member != null && !string.IsNullOrWhiteSpace(member.FirstName)
+            ? $"Bonjour {member.FirstName}"
+            : "Bienvenue";
+    }
     public async Task LoadReservations()
     {
         await _dbContext.OnReservationAdded();
     }
+    private async void Cancel(Reservation reservation)
+    {
+        await _dbContext.CancelReservationAsync(reservation.ReservationID);
+    }
     [RelayCommand]
-        private async Task Reservation()
-        {
-            await Shell.Current.GoToAsync($"Reservationpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
-        }
-        [RelayCommand]
-        private async Task ConsultHistory()
-        {
-
-            await Shell.Current.GoToAsync("Historiquereservationpage");
-        }
+    private async Task Reservation()
+    {
+        await _dbContext.SetWelcomeMessageAsync();
+        await Shell.Current.GoToAsync($"Reservationpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+    }
+    [RelayCommand]
+    private async Task ConsultHistory()
+    {
+        await _dbContext.SetWelcomeMessageAsync();
+        await Shell.Current.GoToAsync("Historiquereservationpage");
+    }
     [RelayCommand]
     private async Task Logout()
     {
