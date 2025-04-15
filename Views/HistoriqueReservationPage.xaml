@@ -49,9 +49,9 @@
                                 </VerticalStackLayout>
 
                                 <VerticalStackLayout Padding="0" Spacing="2">
-                                <Label FontSize="Small" Text="{Binding CategorieAuto}" />
+                                <Label FontSize="Small" Text="{Binding CategorieAuto}" HorizontalOptions="Center"/>
 
-                            </VerticalStackLayout>
+                                </VerticalStackLayout>
                             <!--<VerticalStackLayout Padding="0" Spacing="2">
                                 <Label FontSize="Small" Text="{Binding AutoOptions}" />
 

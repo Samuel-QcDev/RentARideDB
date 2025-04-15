@@ -15,10 +15,11 @@
     <ContentPage.Resources>
         <ResourceDictionary 
                     xmlns:local="clr-namespace:RentARideDB.Models"
-                    xmlns:tools="clr-namespace:RentARideDB.Tools">
+                    xmlns:tools="clr-namespace:RentARideDB.Tools"
+                    xmlns:services="clr-namespace:RentARideDB.Services">
             <local:RadioButtonValueConverter x:Key="RadioButtonValueConverter"/>
             <tools:CarOptionsToStringConverter x:Key="CarOptionsToStringConverter"/>
-            
+            <tools:InverseBoolConverter x:Key="InverseBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -30,8 +31,7 @@
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <VerticalStackLayout>
-
+        <VerticalStackLayout IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}">
             <!--<controls:HeaderView Greeting="{Binding Greeting}" />-->
 
             <Grid
@@ -312,7 +312,9 @@
             HorizontalOptions="Center"
             SemanticProperties.Hint="Navigates to Results page"
             Text="Recherche"/>-->
-                <BoxView HeightRequest="1" Color="DarkGreen" HorizontalOptions="FillAndExpand" />
+            <BoxView BackgroundColor="#80000000" IsVisible="{Binding IsBusy}" InputTransparent="False" ZIndex="1" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="DarkGreen" VerticalOptions="Center" HorizontalOptions="Center"/>
+            <BoxView HeightRequest="1" Color="DarkGreen" HorizontalOptions="FillAndExpand" />
             <CollectionView VerticalOptions="FillAndExpand"
                             HorizontalOptions="FillAndExpand"
                             ItemsSource="{Binding Vehicules}"

@@ -44,7 +44,6 @@ namespace RentARideDB.Services
             ReservationsResultPast = new ObservableCollection<Reservation>();
             ReservationsResultCurrent = new ObservableCollection<Reservation>();
         }
-
         public async Task InitAsync()
         {
             if (_instance == null) return;
@@ -181,7 +180,6 @@ namespace RentARideDB.Services
             }
             Console.WriteLine("Table creation process completed.");
         }
-
         // Method to clear all data from the tables
         public async Task ClearAllTablesAsync()
         {
@@ -641,11 +639,11 @@ namespace RentARideDB.Services
                 //await CreerReservation(1, DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
 
                 // Past Reservations
-                await CreerReservation(1, new DateTime(2025, 03, 11, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, new DateTime(2025, 03, 17, 10, 00, 0), new DateTime(2025, 03, 17, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(1, new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
-                await CreerReservation(2, new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, new DateTime(2025, 03, 11, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, new DateTime(2025, 03, 17, 10, 00, 0), new DateTime(2025, 03, 17, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(1, new DateTime(2025, 03, 19, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
+                //await CreerReservation(2, new DateTime(2025, 03, 20, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
             }
             Console.WriteLine("SeedDataAsync() completed!");
         }

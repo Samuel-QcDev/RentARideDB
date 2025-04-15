@@ -315,28 +315,36 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
 
         if (ReservationSearchDetails.RequestedEndTime < ReservationSearchDetails.RequestedStartTime)
         {
+            if (IsBusy == true)
+                IsBusy = false;
             string message = "The End Time cannot be BEFORE the Start Time! \n\n Please enter a valid time.";
             await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
         else if (ReservationSearchDetails.RequestedStartTime < DateTime.Now)
         {
+            if (IsBusy == true)
+                IsBusy = false;
             string message = "The Start time cannot be before now! \n\n Please enter a valid time.";
             await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
         else if (EndDate < StartDate)
         {
+            if (IsBusy == true)
+                IsBusy = false;
             string message = "The End Date cannot be BEFORE the Start Date! \n\n Please enter a valid Date.";
             await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
         else if (interval > threshold6Hours)
         {
-            {
-                string message = "RentARide only provides short-time rentals! \n\n Please enter a time interval of less than 6 hours.";
-                await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
-            }
+            if (IsBusy == true)
+                IsBusy = false;
+            string message = "RentARide only provides short-time rentals! \n\n Please enter a time interval of less than 6 hours.";
+            await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
         else if (interval < threshold30Mins)
         {
+            if (IsBusy == true)
+                IsBusy = false;
             string message = "The minimum rental period is 30 minutes! \n\n Please enter a valid interval.";
             await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
@@ -373,6 +381,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     // Main method to filter vehicules based on criteria
     private async Task<bool> AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
     {
+        IsBusy = true;
         Console.WriteLine("AddVehiculesBasedOnAllUserInputs() called");
         if (isLoading)
         {
@@ -391,13 +400,12 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         {
             stations = stations.Where(station => station.StationAddress == ReservationSearchDetails.StationAddress).ToList();
         }
-
         var selectedStations = stations.ToList();
         _dbContext.selectedStationID.Clear(); // Clear selected stations
-                                                // Add the selected stations to the StationDetails list
+                                                
         foreach (var station in selectedStations)
         {
-            _dbContext.selectedStationID.Add(station.StationId);
+            _dbContext.selectedStationID.Add(station.StationId); // Add the selected stations to the StationDetails list
         }
         List<Vehicule> selectedVehicles;
         // Fetch vehicles from the database
@@ -443,6 +451,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         }
         isLoading = false;
         Console.WriteLine("AddVehiculesBasedOnAllUserInputs() finished");
+        IsBusy = false;
         return true;
     }
 
@@ -558,6 +567,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
     private async void Reserve(Vehicule vehicule)
     {
+        IsBusy = true;
         Console.WriteLine("Reserve called for vehicule: " + vehicule.vehiculeId);
         Console.WriteLine("Vehicule debug:");
         Console.WriteLine($"ID: {vehicule?.vehiculeId}");
@@ -585,18 +595,24 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         //}
         else if (EndDate < StartDate)
         {
+            if (IsBusy == true)
+                IsBusy = false;
             string message = "The End Date cannot be BEFORE the Start Date! \n\n Please enter a valid Date.";
             await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
         else if (interval > threshold6Hours)
         {
             {
+                if (IsBusy == true)
+                    IsBusy = false;
                 string message = "RentARide only provides short-time rentals! \n\n Please enter a time interval of less than 6 hours.";
                 await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
             }
         }
         else if (interval < threshold30Mins)
         {
+            if (IsBusy == true)
+                IsBusy = false;
             string message = "The minimum rental period is 30 minutes! \n\n Please enter a valid time interval.";
             await Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
@@ -609,6 +625,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
                 {
                     Console.WriteLine($"Number of past reservations is {_dbContext.ReservationsResultPast.Count}");
                     Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
+                    IsBusy = false;
                     await Shell.Current.GoToAsync("Mainpage");
                     Console.WriteLine($"Number of current reservations is {_dbContext.ReservationsResultCurrent.Count}");
                 }
