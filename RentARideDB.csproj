@@ -52,6 +52,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="RentARideDBTest" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Compile Remove="RentARideDB.Tests\**" />
 		<EmbeddedResource Remove="RentARideDB.Tests\**" />
 		<MauiCss Remove="RentARideDB.Tests\**" />

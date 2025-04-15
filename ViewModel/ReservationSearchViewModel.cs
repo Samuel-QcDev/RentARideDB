@@ -379,7 +379,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
 
     // Main method to filter vehicules based on criteria
-    private async Task<bool> AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
+    public async Task<bool> AddVehiculesBasedOnAllUserInputs(string optionsChecked = "")
     {
         IsBusy = true;
         Console.WriteLine("AddVehiculesBasedOnAllUserInputs() called");

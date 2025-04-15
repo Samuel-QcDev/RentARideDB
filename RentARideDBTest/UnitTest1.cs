@@ -3,7 +3,7 @@ using Xunit;
 
 namespace RentARideDBTest
 {
-    public class PreferenceTests
+    public class TrueTest
     {
         [Fact]
         public void MustBeTrue()

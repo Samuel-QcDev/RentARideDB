@@ -44,6 +44,17 @@ namespace RentARideDB.Services
             ReservationsResultPast = new ObservableCollection<Reservation>();
             ReservationsResultCurrent = new ObservableCollection<Reservation>();
         }
+        public ApplicationDbContext(SQLiteAsyncConnection connection)
+        {
+            _dbConnection = connection;
+            InitTables();
+        }
+        private void InitTables()
+        {
+            _dbConnection.CreateTableAsync<Vehicule>().Wait();
+            _dbConnection.CreateTableAsync<AutoOption>().Wait();
+            _dbConnection.CreateTableAsync<Station>().Wait();
+        }
         public async Task InitAsync()
         {
             if (_instance == null) return;
