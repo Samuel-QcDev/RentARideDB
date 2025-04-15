@@ -50,6 +50,7 @@ public partial class ReservationSearchPage : ContentPage
         {
             vm.WelcomeMessage = _dbContext.WelcomeMessage;
         }
+        await _dbContext.OnReservationAdded();
     }
 
     // This method is called when the page is about to appear

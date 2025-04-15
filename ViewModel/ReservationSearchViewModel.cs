@@ -169,7 +169,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     public ReservationSearchViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        SetWelcomeMessage();
+        //SetWelcomeMessage();
 
         // Initialize the Commands for UI inputs
         OnVehicleTypeChangedCommand = new RelayCommand(OnVehicleTypeChanged);
