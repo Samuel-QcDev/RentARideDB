@@ -191,10 +191,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         LoginDetails = new Login();
         MembreDetails = new Membre();
 
-
-        //ReservationsResultPast = new ObservableCollection<Reservation>();
-        //ReservationsResultCurrent = new ObservableCollection<Reservation>();
-
         // Initialize some options
         StartDate = DateTime.Now.Date;
         EndDate = DateTime.Now.Date;
@@ -207,21 +203,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         ReservationSearchDetails.CategorieAuto = "Essence";
 
         InitRes();
-       /* AddVehiculesBasedOnAllUserInputs(); */  // Populate the CollectionView with vehicules according to initial conditions
-/*        OnReservationAdded();*/ // Add the reservations to the correct CollectionView to display on MainPage or HistoriquePage 
-                              //var vehicules = _dbContext.GetTableRows<Vehicule>("Vehicule");
-                              //Console.WriteLine(MemberFirstName);
-
-        //if (MemberFirstName != null)
-        //{
-        //    Greeting = $"Hello, {MemberFirstName}!";
-        //}
-        //else
-        //{
-        //    Greeting = "Hello User!";
-        //}
-
-        //DateChangedFlag = 0;
     }
     public async Task InitRes()
     {
@@ -285,22 +266,22 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     }
     partial void OnIsCheckedMP3Changed(bool value)
     {
-        if (!IsCheckedMP3) AddVehiculesBasedOnAllUserInputs("MP3");
+        if (!value) AddVehiculesBasedOnAllUserInputs("MP3");
         else AddVehiculesBasedOnAllUserInputs();
     }
     partial void OnIsCheckedACChanged(bool value)
     {
-        if (!IsCheckedAC) AddVehiculesBasedOnAllUserInputs("AC");
+        if (!value) AddVehiculesBasedOnAllUserInputs("AC");
         else AddVehiculesBasedOnAllUserInputs();
     }
     partial void OnIsCheckedGPSChanged(bool value)
     {
-        if (!IsCheckedGPS) AddVehiculesBasedOnAllUserInputs("GPS");
+        if (!value) AddVehiculesBasedOnAllUserInputs("GPS");
         else AddVehiculesBasedOnAllUserInputs();
     }
     partial void OnIsCheckedChildSeatChanged(bool value)
     {
-        if (!IsCheckedChildSeat) AddVehiculesBasedOnAllUserInputs("ChildSeat");
+        if (!value) AddVehiculesBasedOnAllUserInputs("ChildSeat");
         else AddVehiculesBasedOnAllUserInputs();
     }
     private void OnStationChanged()
@@ -545,15 +526,15 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
     if (containsAnyValue)
             return false;
     // If no options are checked, and the vehicle has no options, it's valid
-    if (addOptions.Count == 0 && vehicleOptions.Count == 0)
+    else if (addOptions.Count == 0 && vehicleOptions.Count == 0)
             return true;
-    // If all the selected options are present and the vehicle doesn't have any options, it's valid
-    if (allValuesInList && vehicleOptions.Count > 0)
-    {
-        return true;
-    }
-
-    return false;
+    else if (addOptions.Count == 0 && vehicleOptions.Count > 0)
+            return false;
+            // If all the selected options are present and the vehicle doesn't have any options, it's valid
+    else if (allValuesInList && vehicleOptions.Count > 0)
+            return true;
+    else
+            return false;
 }
     private async Task<bool> CheckStation(Vehicule vehicule)
     {
