@@ -440,6 +440,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
                     // If the selected vehicle type is "Auto"
                     if (ReservationSearchDetails.TypeVehicule == "Auto")
                     {
+                        if (IsAutoSelected == false)
+                            IsAutoSelected = true;
                         string selectedCategory = CategorieAuto;
                         // Check if the vehicle is of type "Auto" and matches the category and options
                         if (vehicule.categorieAuto == selectedCategory && await CheckOptions(vehicule, optionsChecked))
@@ -450,6 +452,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
                     }
                     else
                     {
+                        if (IsAutoSelected == true)
+                            IsAutoSelected = false;
                         // If the selected type is not "Auto", simply check the station
                         await CheckStation(vehicule);
                     }

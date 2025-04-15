@@ -745,6 +745,7 @@ namespace RentARideDB.Services
             {
                 // Delete the reservation from the database
                 await _dbConnection.DeleteAsync(reservation);
+                await OnReservationAdded();
                 return true; // Return true if the deletion was successful
             }
 
