@@ -49,7 +49,6 @@ public partial class MainViewModel : LocalBaseViewModel
         //    StationId = 1,
         //    CategorieAuto = "Essence"
         //});
-
     }
     private async Task SetWelcomeMessageAsync()
     {

@@ -21,7 +21,7 @@ public partial class HistoriqueReservationPage : ContentPage
         base.OnAppearing();
 
         // Refresh welcome message when page appears
-        await _dbContext.SetWelcomeMessageAsync();
+        //await _dbContext.SetWelcomeMessageAsync();
 
         // Now manually update the ViewModel value
         var vm = BindingContext as HistoriqueReservationViewModel;
@@ -29,5 +29,6 @@ public partial class HistoriqueReservationPage : ContentPage
         {
             vm.WelcomeMessage = _dbContext.WelcomeMessage;
         }
+        await _dbContext.OnReservationAdded();
     }
 }

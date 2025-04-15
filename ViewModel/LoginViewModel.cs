@@ -76,10 +76,14 @@ public partial class LoginViewModel : LocalBaseViewModel
                     if (((LoginDetails.EmailAddress == membre.MemberUserName) && (LoginDetails.Password == membre.MemberPassword)))
                     {
                         await LoginAsync(membre.MemberID);
-                        await _dbContext.OnReservationAdded();
-                        await _dbContext.SetWelcomeMessageAsync();
-                        await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberUserName}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
-                        return;
+                        if (await _dbContext.OnReservationAdded())
+                        {
+                            if (await _dbContext.SetWelcomeMessageAsync())
+                            {
+                                await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberUserName}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
+                                return;
+                            }
+                        }
                     }
                 }
                 await Application.Current.MainPage.DisplayAlert(

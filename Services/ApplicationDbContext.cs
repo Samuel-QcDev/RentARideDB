@@ -74,7 +74,7 @@ namespace RentARideDB.Services
                 return _instance;
             }
         }
-        public async Task OnReservationAdded()
+        public async Task<bool> OnReservationAdded()
         {
             Console.WriteLine("OnReservationAdded CALLED");
             ReservationsResultPast.Clear();
@@ -109,6 +109,7 @@ namespace RentARideDB.Services
             //_mainViewModel.RefreshReservationsResultCurrent();
             Console.WriteLine($"Number of past reservations is {ReservationsResultPast.Count}");
             Console.WriteLine($"Number of current reservations is {ReservationsResultCurrent.Count}");
+            return true;
         }
         private async Task CreateTablesAsync()
         {
@@ -432,23 +433,28 @@ namespace RentARideDB.Services
             return "Bienvenue";
         }
         // Method to get the logged-in member's first name and set the WelcomeMessage
-        public async Task SetWelcomeMessageAsync()
+        public async Task<bool> SetWelcomeMessageAsync()
         {
             int? memberId = await GetLoggedInMemberIdAsync();
 
             if (!memberId.HasValue)
             {
                 WelcomeMessage = "Bonjour Invité";
-                return;
+                return true;
             }
-
             var member = await _dbConnection.Table<Membre>()
                 .FirstOrDefaultAsync(m => m.MemberID == memberId.Value);
 
             if (member != null && !string.IsNullOrWhiteSpace(member.FirstName))
+            {
                 WelcomeMessage = $"Bonjour {member.FirstName}";
+                return true;
+            }
             else
+            {
                 WelcomeMessage = "Bienvenue";
+                return true;
+            }
         }
         private async Task SeedDataAsync()
         {
@@ -633,6 +639,7 @@ namespace RentARideDB.Services
                 //await CreerReservation(1, DateTime.Today.AddDays(1).AddHours(2), DateTime.Today.AddDays(1).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
                 //await CreerReservation(1, DateTime.Today.AddDays(0).AddHours(1), DateTime.Today.AddDays(0).AddHours(5).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
                 //await CreerReservation(1, DateTime.Today.AddDays(2).AddHours(0), DateTime.Today.AddDays(2).AddHours(2).AddMinutes(0), new Vehicule("Auto", 1, "Essence", []));
+
                 // Past Reservations
                 await CreerReservation(1, new DateTime(2025, 03, 11, 10, 30, 0), new DateTime(2025, 03, 11, 11, 30, 0), new Vehicule("Auto", 1, "Essence", []));
                 await CreerReservation(1, new DateTime(2025, 03, 15, 14, 0, 0), new DateTime(2025, 03, 15, 16, 30, 0), new Vehicule("Auto", 1, "Essence", []));

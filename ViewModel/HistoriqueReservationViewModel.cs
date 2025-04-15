@@ -16,7 +16,7 @@ public partial class HistoriqueReservationViewModel : LocalBaseViewModel
     public HistoriqueReservationViewModel(ApplicationDbContext dbContext)
     {
         _dbContext = ApplicationDbContext.Instance;
-        SetWelcomeMessage();
+        //SetWelcomeMessage();
         CancelCommand = new RelayCommand<Reservation>(Cancel);
     }
     private async void SetWelcomeMessage()

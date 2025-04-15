@@ -28,6 +28,7 @@ public partial class MainPage : ContentPage
         {
             vm.WelcomeMessage = _dbContext.WelcomeMessage;
         }
+        await _dbContext.OnReservationAdded();
     }
 }
 
