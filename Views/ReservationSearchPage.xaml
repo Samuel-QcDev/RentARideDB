@@ -11,7 +11,9 @@
     xmlns:services="clr-namespace:RentARideDB.Services"
     Title="Reservation Search"
     x:DataType="viewmodel:ReservationSearchViewModel">
-
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
     <ContentPage.Resources>
         <ResourceDictionary 
                     xmlns:local="clr-namespace:RentARideDB.Models"

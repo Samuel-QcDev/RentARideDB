@@ -73,7 +73,7 @@ public partial class LoginViewModel : LocalBaseViewModel
             {
                 foreach (Membre membre in AllMembers)
                 {
-                    if (((LoginDetails.EmailAddress == membre.MemberUserName) && (LoginDetails.Password == membre.MemberPassword)))
+                    if (((LoginDetails.UserName == membre.MemberUserName) && (LoginDetails.Password == membre.MemberPassword)))
                     {
                         await LoginAsync(membre.MemberID);
                         if (await _dbContext.OnReservationAdded())
@@ -81,6 +81,8 @@ public partial class LoginViewModel : LocalBaseViewModel
                             if (await _dbContext.SetWelcomeMessageAsync())
                             {
                                 await Shell.Current.GoToAsync($"Mainpage?memberEmail={MemberUserName}&memberPassword={MemberPassword}&memberFirstName={MemberFirstName}");
+                                LoginDetails.UserName = string.Empty;
+                                LoginDetails.Password = string.Empty;
                                 return;
                             }
                         }

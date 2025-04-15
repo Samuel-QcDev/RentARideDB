@@ -24,7 +24,7 @@
                 x:Name="Email"
                 HorizontalOptions="End"
                 Placeholder="Email Address"
-                Text="{Binding LoginDetails.EmailAddress}"
+                Text="{Binding LoginDetails.UserName}"
                 WidthRequest="150" />
         </HorizontalStackLayout>
         <HorizontalStackLayout WidthRequest="300">

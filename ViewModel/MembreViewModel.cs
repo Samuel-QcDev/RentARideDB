@@ -79,6 +79,7 @@ public partial class MembreViewModel : LocalBaseViewModel
             var toast = Toast.Make(message, duration, fontSize);
             await toast.Show(cancellationTokenSource.Token);
             await Shell.Current.GoToAsync($"Loginpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+           
         }
 
         //await Shell.Current.GoToAsync($"Loginpage, navigationParameter");

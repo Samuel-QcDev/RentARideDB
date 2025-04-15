@@ -9,7 +9,9 @@
     xmlns:viewmodel="clr-namespace:RentARideDB.ViewModel"
     Title="Historique"
     x:DataType="viewmodel:HistoriqueReservationViewModel">
-
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
     <!--  Toolbar with a button  -->
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{Binding WelcomeMessage}" />
