@@ -149,7 +149,7 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
             }
         }
     }
-    public async Task<bool> IsCarAvailable(ObservableCollection<Reservation> reservations, int vehiculeID, DateTime newStartTime, DateTime newEndTime)
+    protected virtual async Task<bool> IsCarAvailable(ObservableCollection<Reservation> reservations, int vehiculeID, DateTime newStartTime, DateTime newEndTime)
     {
         var AllReservations = await _dbContext.GetReservationsAsync();
         // Check for overlap with existing reservations for the same car
@@ -190,6 +190,8 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         ResultDetails = new ReservationResult();
         LoginDetails = new Login();
         MembreDetails = new Membre();
+
+
 
         // Initialize some options
         StartDate = DateTime.Now.Date;
@@ -369,8 +371,6 @@ public partial class ReservationSearchViewModel : LocalBaseViewModel
         Console.WriteLine(EndDate);
         ReservationSearchDetails.RequestedEndTime = EndDate.Add(EndTime);
         await Task.Yield();
-        //if (DateChangedFlag != 1)
-        //    DateChangedFlag = 1;
         //if (EndDate < StartDate)
         //{
         //    string message = "The End Date cannot be BEFORE the Start Date! \n\n Please enter a valid Date.";

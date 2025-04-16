@@ -1,87 +1,87 @@
 ﻿using Xunit;
-using RentARideDB.Models;
-using RentARideDB.ViewModel;
 using SQLite;
+using RentARideDB.Models;
 using RentARideDB.Services;
-using System.Collections.ObjectModel;
+using System;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace RentARideDBTest
 {
-    public class ReservationSearchViewModelTests
+    public class SetWelcomeMessageTests
     {
-        private SQLiteAsyncConnection _dbConnection;
-        private ApplicationDbContext _dbContext;
-        private ReservationSearchViewModel _viewModel;
+        private readonly SQLiteAsyncConnection _dbConnection;
+        private readonly ApplicationDbContext _dbContext;
 
-        public ReservationSearchViewModelTests()
+        public SetWelcomeMessageTests()
         {
-            // Set up in-memory database
             _dbConnection = new SQLiteAsyncConnection(":memory:");
-            _dbConnection.CreateTableAsync<Vehicule>().Wait();
-            _dbConnection.CreateTableAsync<AutoOption>().Wait();
-            _dbConnection.CreateTableAsync<Station>().Wait();
-            _dbConnection.CreateTableAsync<Reservation>().Wait();
+            _dbConnection.CreateTableAsync<Membre>().Wait();
+            _dbConnection.CreateTableAsync<Session>().Wait();
 
-            // Set up fake DbContext with our in-memory DB
             _dbContext = new ApplicationDbContext(_dbConnection);
-
-            // Set up ViewModel
-            _viewModel = new ReservationSearchViewModel(_dbContext)
-            {
-                ReservationSearchDetails = new ReservationSearch
-                {
-                    TypeVehicule = "Auto",
-                    StationAddress = "All Stations",
-                    RequestedStartTime = DateTime.Now,
-                    RequestedEndTime = DateTime.Now.AddHours(2)
-                },
-                CategorieAuto = "Essence",
-                IsCheckedGPS = true,
-                IsCheckedMP3 = true
-            };
-
-            // Insert seed data
-            SetupTestData().Wait();
-        }
-
-        private async Task SetupTestData()
-        {
-            var station = new Station { StationId = 1, StationAddress = "All Stations" };
-            await _dbConnection.InsertAsync(station);
-
-            var vehicule = new Vehicule
-            {
-                vehiculeId = 1,
-                type = "Auto",
-                categorieAuto = "Essence",
-                vehiculeStationId = 1
-            };
-            await _dbConnection.InsertAsync(vehicule);
-
-            var options = new[]
-            {
-            new AutoOption { AutoId = vehicule.vehiculeId, Option = "GPS" },
-            new AutoOption { AutoId = vehicule.vehiculeId, Option = "MP3" }
-        };
-            foreach (var option in options)
-            {
-                await _dbConnection.InsertAsync(option);
-            }
         }
 
         [Fact]
-        public async Task AddVehiculesBasedOnAllUserInputs_AddsMatchingVehicule()
+        public async Task SetWelcomeMessageAsync_NoActiveSession_ReturnsBonjourInvite()
         {
             // Act
-            var result = await _viewModel.AddVehiculesBasedOnAllUserInputs();
-
+            var result = await _dbContext.SetWelcomeMessageAsync();
 
             // Assert
             Assert.True(result);
-            Assert.Single(_viewModel.Vehicules);
-            Assert.Equal("Auto", _viewModel.Vehicules.First().type);
+            Assert.Equal("Bonjour Invité", _dbContext.WelcomeMessage);
+        }
+
+        [Fact]
+        public async Task SetWelcomeMessageAsync_ActiveSessionWithNoFirstName_ReturnsBienvenue()
+        {
+            // Arrange
+            var member = new Membre { MemberID = 1, FirstName = null };
+            var session = new Session { MemberID = 1, IsActive = true };
+
+            await _dbConnection.InsertAsync(member);
+            await _dbConnection.InsertAsync(session);
+
+            // Act
+            var result = await _dbContext.SetWelcomeMessageAsync();
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal("Bienvenue", _dbContext.WelcomeMessage);
+        }
+
+        [Fact]
+        public async Task SetWelcomeMessageAsync_WhenActiveSessionExists_SetsWelcomeMessageToMemberName()
+        {
+            // Arrange
+            var connection = new SQLiteAsyncConnection(":memory:");
+            await connection.CreateTableAsync<Membre>();
+            await connection.CreateTableAsync<Session>();
+
+            var dbContext = new ApplicationDbContext(connection);
+
+            var membre = new Membre
+            {
+                MemberID = 1,
+                FirstName = "Samuel"
+            };
+            await connection.InsertAsync(membre);
+
+            var session = new Session
+            {
+                SessionID = 1,
+                MemberID = 1,
+                IsActive = true
+            };
+            await connection.InsertAsync(session);
+
+            // Act
+            var result = await dbContext.SetWelcomeMessageAsync();
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal("Bonjour Samuel", dbContext.WelcomeMessage);
         }
     }
 }
+

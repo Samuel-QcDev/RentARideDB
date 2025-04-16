@@ -70,19 +70,40 @@ public partial class MembreViewModel : LocalBaseViewModel
         }
         else
         {
-            await _dbContext.CreateAsync(new Membre(memberFirstName, memberPassword, memberUserName));
+            var AllMembers = await _dbContext.GetMembresAsync();
 
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            var message = "Your account was created!";
-            ToastDuration duration = ToastDuration.Short;
-            var fontSize = 14;
-            var toast = Toast.Make(message, duration, fontSize);
-            await toast.Show(cancellationTokenSource.Token);
-            await Shell.Current.GoToAsync($"Loginpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
-           
+            if (AllMembers.Count > 0)
+            {
+                foreach (Membre membre in AllMembers)
+                {
+                    if (memberUserName == membre.MemberUserName)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Invalid UserName","This username is already in use.\n\n Please choose a different username.", "OK");
+                    }
+                }
+                await _dbContext.CreateAsync(new Membre(memberFirstName, memberPassword, memberUserName));
+
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                var message = "Your account was created!";
+                ToastDuration duration = ToastDuration.Short;
+                var fontSize = 14;
+                var toast = Toast.Make(message, duration, fontSize);
+                await toast.Show(cancellationTokenSource.Token);
+                await Shell.Current.GoToAsync($"Loginpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+            }
+            else
+            {
+                await _dbContext.CreateAsync(new Membre(memberFirstName, memberPassword, memberUserName));
+
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                var message = "Your account was created!";
+                ToastDuration duration = ToastDuration.Short;
+                var fontSize = 14;
+                var toast = Toast.Make(message, duration, fontSize);
+                await toast.Show(cancellationTokenSource.Token);
+                await Shell.Current.GoToAsync($"Loginpage?memberUserName={memberUserName}&memberPassword={memberPassword}&memberFirstName={memberFirstName}");
+            }
         }
-
-        //await Shell.Current.GoToAsync($"Loginpage, navigationParameter");
     }
     [RelayCommand]
     private async Task BackToLogin()

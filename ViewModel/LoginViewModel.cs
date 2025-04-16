@@ -64,7 +64,7 @@ public partial class LoginViewModel : LocalBaseViewModel
         }
         else
         {
-            // Fetch vehicles from the database
+            // Fetch Members from the database
             var AllMembers = await _dbContext.GetMembresAsync();
 
             //selectedReservation = AllReservations.Where(v => v.MemberID == ReservationSearchDetails.TypeVehicule).ToList();
